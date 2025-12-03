@@ -1,263 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cart</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body>
-    <header class="header-1">
-      <button class="colaps" onclick="showModala()">
-      <div class="icon-cart">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-justify"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>
-    </div>
-  </button>
-    
-      <div>Logo</div>
-      
-    <div class="content-header">
-   
-    <div class="side-nav">
-      <a href="index.html">Acasa</a>
-      <a href="category.html?categorie=1">Produse femei</a>
-      <a href="category.html?categorie=2">Produse barbati</a>
-      <a href="category.html?categorie=3">Produse unisex</a>
-      <a href="">FAQ</a>
-      <a href="">Contact</a>
-      <a href="">Termenii si conditiile</a>
-    </div>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapJobs - Aplicările Mele</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .applications-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
 
-      <div class="icon-cart">
-        <a href="cart.html">
-        <svg
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 18 20"
-        >
-          <a xlink:href="cart.html">
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1"
-          />
-        </svg>
-        <span>0</span>
-      </a>
-    </a>
-      </div>
-    </div>
-    
-    <script src="sidebar.js"></script>
-  </header>
+        .app-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  <section class="tot">
-    
-    <section class="pagina-cart">
-      
-      <div class="cart-container">
-        <div class="headerCart">
-          <div class="produs"><h3>Produs</h3></div>
-          <div class="cantitate">Cantitate</div>
-          <div class="total">Total</div>
+        .app-status {
+            background: rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid #D4AF37;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <header class="header">
+        <div class="logo">SnapJobs</div>
+        <nav class="nav">
+            <a href="index.html">Acasă</a>
+            <a href="student-jobs.html">Caută Joburi</a>
+            <a href="student-applications.html" class="active">
+                Aplicările Mele 
+            </a>
+        </nav>
+    </header>
+
+    <div class="applications-container">
+        <h1 style="color: #D4AF37; margin-bottom: 30px;">Istoric Aplicări</h1>
+        <div id="applicationsList">
+            <!-- Filled by JS -->
         </div>
-        <div class="listCart"></div>
-        <div class="total-box">
-          <div class="subtotal"></div>
-          
-        </div>
-      </div>
-      
-     
-        
-<!--
-        <form class="formular-1" onsubmit="myfunc(event)">
-          
-          <div class="user-box">
-            <label for="nume" class="label">Nume</label>
-            <input type="text" id="nume" placeholder=" " class="input" />
-          </div>
-          <div class="user-box">
-            <label for="email">Email</label>
-            <input type="email" id="email" required />
-          </div>
-          <div class="user-box">
-            <label for="telefon">Nr. telefon</label>
-            <input type="tel" id="telefon" required />
-          </div>
-          
-          <div class="user-box">
-            <label for="adresa">Adresa</label>
-            <input type="text" id="adresa" />
-          </div>
+    </div>
 
-          <div class="user-box">
-            <label for="oras">Oras</label>
-            <input type="text" id="oras" />
-          </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const list = document.getElementById('applicationsList');
+            const appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
 
-          <div class="user-box">
-            <label for="zip">Cod Postal</label>
-            <input type="number" id="zip" />
-          </div>
-
-         
-          
-          
-          <button class="checkOutt" type="submit">Checkout</button>
-
-          <script>
-            const modala = document.querySelector(".formular-1");
-
-            
-            function myfunc(event) {
-              event.preventDefault();
-
-              var nume = document.getElementById("nume").value;
-              var email = document.getElementById("email").value;
-              var telefon = document.getElementById("telefon").value;
-              var adresa = document.getElementById("adresa").value;
-              var oras = document.getElementById("oras").value;
-              var zip = document.getElementById("zip").value;
-
-              let comanda = {
-                nume: nume,
-                email: email,
-                telefon: telefon,
-                adresa: adresa,
-                oras: oras,
-                zip: zip,
-              };
-
-              let comandaCart = {
-                ...cart,
-                ...comanda,
-              };
-
-              console.log(comanda);
-              console.log(cart);
-
-              let comandaFinala = JSON.stringify(comandaCart);
-
-              console.log(comandaFinala);
-
-
-              console.log(comanda.email);
-              // Define the data object to be sent
-          const dataToSend = {
-            name: comanda.nume,
-            email: comanda.email,
-            telefon: comanda.telefon,
-            adresa: comanda.adresa,
-            oras: comanda.oras,
-            zip: comanda.zip,
-            comandaCart: cart,
-          };
-
-          sessionStorage.setItem("Cacac", dataToSend);
-
-          // Function to handle button click event
-          if (cart.length > 0){
-            try {
-              // Make a POST request using Axios
-              const response = axios.post('/send-data', dataToSend);
-              console.log(response.data);
-              alert('Data sent successfully');
-              
-              
-            } catch (error) {
-              console.error(error.response.data.error || error.message);
-              alert('Failed to send data');
+            if (appliedIds.length === 0) {
+                list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
+                return;
             }
-          } else {
-            alert("cosul dvs este gol")
-          }
 
-          // Attach click event listener to the button
-         /* document.getElementById('sendButton').addEventListener('click', sendData); */
-                    
-                  }
-          </script>
-        </form>
-    
-      -->
+            // Fetch all jobs
+            let allJobs = [];
+            try {
+                const res = await fetch('jobs.json');
+                const staticJobs = await res.json();
+                const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
+                allJobs = [...staticJobs, ...newJobs];
+            } catch (e) {
+                console.error("Err loading jobs", e);
+            }
 
-      <form class="formular-1" onsubmit="myfunc(event)">
-  
-        <div class="user-box">
-          <label for="nume" class="label">Nume</label>
-          <input type="text" id="nume" placeholder=" " class="input" required/>
-        </div>
-        <div class="user-box">
-          <label for="email">Email</label>
-          <input type="email" id="email" required/>
-        </div>
-        <div class="user-box">
-          <label for="telefon">Nr. telefon</label>
-          <input type="tel" id="telefon" required/>
-        </div>
-        
-        <div class="user-box">
-          <label for="adresa">Adresa</label>
-          <input type="text" id="adresa" required/>
-        </div>
-      
-        <div class="user-box">
-          <label for="oras">Oras</label>
-          <input type="text" id="oras" required/>
-        </div>
-      
-        <div class="user-box">
-          <label for="zip">Cod Postal</label>
-          <input type="text" id="zip" required/>
-        </div>
-      
-        <div id="error-message" style="color: red;"></div>
-        <div id="success-message" style="color: green;"></div>
-      
-        <button class="checkOutt" type="submit">Checkout</button>
-      
-        <script src="formular.js" defer></script>
-      </form>
-    
+            // Filter applied jobs
+            const appliedJobs = allJobs.filter(job => appliedIds.includes(job.id));
 
-      <script src="cart.js" defer></script>
-    </section>
-    
-    </section>
-
-    <footer class="footer">
-      <div class="f-item">
-        <h2>Produse</h2>
-        <a href="category.html?categorie=1">Parfumuri Femei</a>
-        <a href="category.html?categorie=2">Parfumuri Barbati</a>
-        <a href="category.html?categorie=3">Parfumuri Unisex</a>
-      </div>
-      <div class="f-item">
-        <h2>Arome Dubai</h2>
-        <a href="">Contact</a>
-        <a href="">FAQ</a>
-        <a href="">Confidentialitate</a>
-        <a href="">Termeni si conditii</a>
-      </div>
-      <div class="f-item">
-        <h2>INFORMATII</h2>
-        <a href="">Transport si livrare</a>
-      
-        <a href="">Procesul de cumparare si plata</a>
-       
-
-      </div>
-      <div class="f-item">
-        <h2>CONTACT</h2>
-        <a href="">contact@parfumescu.ro</a>
-        <p>Luni - Vineri: 09:00 - 18:00</p>
-        <p>Str. Panduri</p>
-      </div>
-    </footer>
-  </body>
+            appliedJobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.innerHTML = `
+                    <div>
+                        <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
+                        <p style="color: #aaa;">${job.company}</p>
+                        <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="app-status">Aplicat</div>
+                        <div style="color: #fff; font-weight: bold; margin-top: 10px;">${job.salary}</div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        });
+    </script>
+</body>
 </html>

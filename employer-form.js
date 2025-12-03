@@ -8,9 +8,19 @@ document.getElementById("jobForm").addEventListener("submit", function(e) {
     const salary = document.getElementById("salary").value;
     const location = document.getElementById("location").value;
     const description = document.getElementById("description").value;
+    const date = document.getElementById("date").value;
+
+    // Generare coordonate random în București (aprox) pentru demo
+    // Center: 44.4268, 26.1025. Spread: ~0.05
+    let lat = null;
+    let lng = null;
+
+    if (type !== 'online') {
+        lat = 44.4268 + (Math.random() - 0.5) * 0.1;
+        lng = 26.1025 + (Math.random() - 0.5) * 0.1;
+    }
 
     // Creare obiect job
-    // Generăm un ID random mare pentru a nu intra în conflict cu cele statice
     const newJob = {
         id: Date.now(), 
         title: title,
@@ -19,7 +29,10 @@ document.getElementById("jobForm").addEventListener("submit", function(e) {
         salary: salary,
         location: location,
         description: description,
-        image: `img/job-${type}.png` // Imagine default bazată pe tip
+        date: date,
+        lat: lat,
+        lng: lng,
+        image: `img/job-${type}.png`
     };
 
     // Salvare în LocalStorage
@@ -28,10 +41,5 @@ document.getElementById("jobForm").addEventListener("submit", function(e) {
     localStorage.setItem("newJobs", JSON.stringify(storedJobs));
 
     alert("Jobul a fost publicat cu succes!");
-    
-    // Reset form
-    e.target.reset();
-    
-    // Opțional: Redirect către dashboard student pentru a-l vedea
-    // window.location.href = "index.html";
+    window.location.href = "employer-dashboard.html";
 });
