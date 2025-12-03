@@ -27,8 +27,8 @@ function initMap() {
 
     // Add User Marker
     L.circle([userLat, userLng], {
-        color: '#D4AF37',
-        fillColor: '#D4AF37',
+        color: '#29b6f6',
+        fillColor: '#29b6f6',
         fillOpacity: 0.2,
         radius: 5000 // Default visual radius
     }).addTo(map);
@@ -74,7 +74,7 @@ function renderJobs(jobs) {
         card.innerHTML = `
             <div class="job-card-content">
                 <h3 style="color: #fff; margin: 0 0 5px 0;">${job.title}</h3>
-                <div style="color: #D4AF37; font-size: 0.9em; margin-bottom: 5px;">${job.company}</div>
+                <div style="color: #29b6f6; font-size: 0.9em; margin-bottom: 5px;">${job.company}</div>
                 <div style="color: #ccc; font-size: 0.9em; margin-bottom: 5px;">
                     📍 ${job.location} • 📅 ${job.date || 'Flexibil'}
                 </div>
@@ -82,10 +82,10 @@ function renderJobs(jobs) {
                 <p style="color: #aaa; font-size: 0.85em; margin-top: 8px;">${job.description}</p>
             </div>
             <div class="job-card-actions">
-                <span class="job-type-badge" style="background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-bottom: 10px; border: 1px solid #D4AF37;">
+                <span class="job-type-badge" style="background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-bottom: 10px; border: 1px solid #29b6f6;">
                     ${job.type.toUpperCase()}
                 </span>
-                <button onclick="applyToJob(${job.id})" style="background: #D4AF37; color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px;">
+                <button onclick="applyToJob(${job.id})" style="background: #29b6f6; color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px;">
                     Aplică Acum
                 </button>
             </div>

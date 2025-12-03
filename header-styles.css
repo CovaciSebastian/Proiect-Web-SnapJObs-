@@ -1,0 +1,46 @@
+.header-1 {
+  /* Override global properties */
+  justify-content: space-between;
+  gap: 0; /* Remove gap set by original header-1 */
+  padding: 0 5vw; /* Add some padding to the sides */
+}
+
+.colaps {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  /* Ensure the SVG is visible and styled */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Color of the SVG icon */
+}
+
+/* Style for the SVG inside colaps */
+.colaps .icon-cart svg {
+    width: 30px; /* Make SVG larger */
+    height: 30px;
+}
+
+/* Ensure the logo is properly aligned and sized within the header */
+.header-1 .logo {
+    display: flex; /* Ensure it behaves like a flex item */
+    align-items: center;
+}
+
+/* Ensure application icon is aligned */
+.icon-applications {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adjust spacing between icon and count */
+}
+
+/* Adjust general 'div' styles that might be affecting header elements */
+.header-1 div {
+  padding: 0; /* Reset padding that might be inherited from generic header-1 div rule */
+}
+/* If .side-nav is now a direct sibling of header-1 in HTML,
+   its positioning (absolute) still needs to be accurate relative to the viewport.
+   This should already be handled by its absolute positioning if top: 10vh is used.
+*/
