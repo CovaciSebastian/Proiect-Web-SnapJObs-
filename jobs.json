@@ -6,6 +6,9 @@
         "type": "eveniment",
         "salary": "250 RON/zi",
         "location": "București, Romexpo",
+        "lat": 44.4762,
+        "lng": 26.0634,
+        "date": "2025-08-15",
         "description": "Căutăm persoane energice pentru împărțire flyere și scanare bilete la intrare. Program 14:00 - 22:00.",
         "image": "img/job-eveniment.png"
     },
@@ -16,6 +19,9 @@
         "type": "online",
         "salary": "20 RON/oră",
         "location": "Remote",
+        "lat": null,
+        "lng": null,
+        "date": "2025-06-01",
         "description": "Ai nevoie doar de un laptop și atenție la detalii. Program flexibil, ideal printre cursuri.",
         "image": "img/job-online.png"
     },
@@ -26,6 +32,9 @@
         "type": "fizic",
         "salary": "300 RON/zi",
         "location": "București, Sector 3",
+        "lat": 44.4177,
+        "lng": 26.1300,
+        "date": "2025-06-10",
         "description": "Muncă fizică. Ajutor la încărcarea și descărcarea mobilei dintr-un apartament. Se oferă masă de prânz.",
         "image": "img/job-fizic.png"
     },
@@ -36,6 +45,9 @@
         "type": "eveniment",
         "salary": "300 RON/seară",
         "location": "Hotel Marriott",
+        "lat": 44.4273,
+        "lng": 26.0867,
+        "date": "2025-06-20",
         "description": "Primirea invitaților și oferirea de informații. Ținută elegantă obligatorie (asigurată de noi).",
         "image": "img/job-eveniment.png"
     },
@@ -46,6 +58,9 @@
         "type": "online",
         "salary": "1500 RON/proiect",
         "location": "Remote",
+        "lat": null,
+        "lng": null,
+        "date": "2025-07-01",
         "description": "Verificarea comentariilor și mesajelor pentru o pagină de brand. Program 2 ore/zi timp de o lună.",
         "image": "img/job-online.png"
     },
@@ -56,6 +71,9 @@
         "type": "fizic",
         "salary": "180 RON/zi",
         "location": "Ilfov, Chitila",
+        "lat": 44.5050,
+        "lng": 25.9800,
+        "date": "2025-06-05",
         "description": "Aranjare cutii pe rafturi. Nu necesită experiență. Transport asigurat de la Metrou 1 Mai.",
         "image": "img/job-fizic.png"
     }

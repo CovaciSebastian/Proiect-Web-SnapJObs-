@@ -1,75 +1,113 @@
 <!DOCTYPE html>
 <html lang="ro">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SnapJobs – Angajatori</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="header-1">
-      <div class="logo">SnapJobs Business</div>
-      <div class="content-header">
-        <div class="side-nav seVede" style="position: static; height: auto; background: transparent; display: flex; flex-direction: row;">
-          <a href="index.html">Înapoi la Platformă</a>
-          <a href="#" class="active">Postează Job</a>
-        </div>
-      </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapJobs - Angajator Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .btn-add-job {
+            background-color: #D4AF37;
+            color: #000;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card-employer {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .applicant-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #D4AF37;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            border: 1px solid #D4AF37;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <header class="header">
+        <div class="logo">SnapJobs Employer</div>
+        <nav class="nav">
+            <a href="#" class="active">Joburile Mele</a>
+            <a href="student-jobs.html" style="color: #888;">(Ieșire)</a>
+        </nav>
     </header>
 
-    <section class="tot" style="padding: 5vh;">
-      <div class="titluri">
-        <span>Postează un Job Nou</span>
-      </div>
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <h1 style="color: #fff;">Panou de Control</h1>
+            <a href="employer-post.html" class="btn-add-job">+ Adaugă Job Nou</a>
+        </div>
 
-      <div class="container" style="display: flex; justify-content: center;">
-        <form id="jobForm" class="formular-1" style="width: 40vw; padding: 4vh;">
-          
-          <div class="user-box">
-            <input type="text" id="title" required />
-            <label>Titlu Job</label>
-          </div>
+        <h2 style="color: #D4AF37; margin-bottom: 20px;">Joburi Active</h2>
+        <div id="employerJobsList" class="jobs-grid">
+            <!-- Jobs will be loaded here -->
+        </div>
+    </div>
 
-          <div class="user-box">
-            <input type="text" id="company" required />
-            <label>Nume Companie</label>
-          </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const list = document.getElementById('employerJobsList');
+            const jobs = JSON.parse(localStorage.getItem('newJobs')) || [];
 
-          <div class="user-box">
-             <!-- Simplificare: Select pentru tip -->
-            <select id="type" style="width: 100%; background: #110e15; color: white; border: 0.2vh solid #110e15; padding: 1vh; margin-bottom: 2vh;">
-                <option value="eveniment">Eveniment</option>
-                <option value="online">Online</option>
-                <option value="fizic">Muncă Fizică</option>
-            </select>
-          </div>
+            if (jobs.length === 0) {
+                list.innerHTML = '<p style="color: #888;">Nu ai publicat niciun job încă.</p>';
+                return;
+            }
 
-          <div class="user-box">
-            <input type="text" id="salary" placeholder="Ex: 200 RON/zi" required />
-            <label>Salariu</label>
-          </div>
-
-          <div class="user-box">
-            <input type="text" id="location" required />
-            <label>Locație</label>
-          </div>
-
-          <div class="user-box">
-            <textarea id="description" rows="4" style="width: 100%; background: #110e15; color: #ffd700; border: 0.2vh solid #110e15; padding: 1vh;" placeholder="Descriere job..."></textarea>
-          </div>
-
-          <button type="submit" class="checkOutt">Publică Jobul</button>
-        </form>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <div class="f-item">
-        <h2>SnapJobs Business</h2>
-        <p>Găsește studenți motivați pentru proiectele tale.</p>
-      </div>
-    </footer>
-
-    <script src="employer-form.js"></script>
-  </body>
+            jobs.forEach(job => {
+                // Mock applicants count (0-5 random)
+                const applicants = Math.floor(Math.random() * 6);
+                
+                const card = document.createElement('div');
+                card.className = 'job-card-employer';
+                card.innerHTML = `
+                    <div class="applicant-count">${applicants} Aplicanți</div>
+                    <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
+                    <p style="color: #888; font-size: 0.9em;">📅 ${job.date}</p>
+                    <p style="color: #fff; font-weight: bold; margin: 10px 0;">${job.salary}</p>
+                    <p style="color: #aaa; font-size: 0.9em;">${job.location}</p>
+                    <div style="margin-top: 15px;">
+                        <button style="background: transparent; border: 1px solid #555; color: #fff; padding: 5px 10px; cursor: pointer;">Editează</button>
+                        <button style="background: transparent; border: 1px solid #D4AF37; color: #D4AF37; padding: 5px 10px; cursor: pointer; margin-left: 10px;">Vezi Aplicanți</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        });
+    </script>
+</body>
 </html>
