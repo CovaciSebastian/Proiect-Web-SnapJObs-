@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "title": "Promoter Festival Muzică",
+        "company": "EventHorizons",
+        "type": "eveniment",
+        "salary": "250 RON/zi",
+        "location": "București, Romexpo",
+        "description": "Căutăm persoane energice pentru împărțire flyere și scanare bilete la intrare. Program 14:00 - 22:00.",
+        "image": "img/job-eveniment.png"
+    },
+    {
+        "id": 2,
+        "title": "Operator Introducere Date (Remote)",
+        "company": "DataFlow Solutions",
+        "type": "online",
+        "salary": "20 RON/oră",
+        "location": "Remote",
+        "description": "Ai nevoie doar de un laptop și atenție la detalii. Program flexibil, ideal printre cursuri.",
+        "image": "img/job-online.png"
+    },
+    {
+        "id": 3,
+        "title": "Ajutor Mutări Mobilă",
+        "company": "MoveIt Fast",
+        "type": "fizic",
+        "salary": "300 RON/zi",
+        "location": "București, Sector 3",
+        "description": "Muncă fizică. Ajutor la încărcarea și descărcarea mobilei dintr-un apartament. Se oferă masă de prânz.",
+        "image": "img/job-fizic.png"
+    },
+    {
+        "id": 4,
+        "title": "Hostess Eveniment Corporate",
+        "company": "Business Events RO",
+        "type": "eveniment",
+        "salary": "300 RON/seară",
+        "location": "Hotel Marriott",
+        "description": "Primirea invitaților și oferirea de informații. Ținută elegantă obligatorie (asigurată de noi).",
+        "image": "img/job-eveniment.png"
+    },
+    {
+        "id": 5,
+        "title": "Moderator Conținut Social Media",
+        "company": "Social Buzz",
+        "type": "online",
+        "salary": "1500 RON/proiect",
+        "location": "Remote",
+        "description": "Verificarea comentariilor și mesajelor pentru o pagină de brand. Program 2 ore/zi timp de o lună.",
+        "image": "img/job-online.png"
+    },
+    {
+        "id": 6,
+        "title": "Manipulant Marfă Depozit",
+        "company": "Logistics Pro",
+        "type": "fizic",
+        "salary": "180 RON/zi",
+        "location": "Ilfov, Chitila",
+        "description": "Aranjare cutii pe rafturi. Nu necesită experiență. Transport asigurat de la Metrou 1 Mai.",
+        "image": "img/job-fizic.png"
+    }
+]

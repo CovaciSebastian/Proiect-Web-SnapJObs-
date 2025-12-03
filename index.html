@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapJobs – Joburi pentru studenți</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  </head>
+  <body>
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+
+      <div class="logo">SnapJobs</div>
+
+      <div class="content-header">
+        <!-- MENIU LATERAL STUDENT -->
+        <div class="side-nav">
+          <a href="student-dashboard.html">Acasă</a>
+          <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
+          <a href="student-dashboard.html?type=online">Joburi online</a>
+          <a href="student-dashboard.html?type=fizic">Joburi muncă fizică</a>
+          <a href="student-applications.html">Aplicațiile mele</a>
+          <a href="student-profile.html">Profil</a>
+          <a href="employer-dashboard.html" style="color: #d4af37;">Zona Angajatori</a>
+          <a href="login.html">Logout</a>
+        </div>
+
+        <!-- ICON "profil"/aplicații (poți păstra icon-ul de coș ca "număr aplicații") -->
+        <div class="icon-applications">
+  <a href="student-applications.html">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+      viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+    </svg>
+    <span id="applications-count" class="job-bubble">0</span>
+  </a>
+</div>
+
+      </div>
+
+      <script src="sidebar.js"></script>
+    </header>
+
+    <!-- SEARCH JOBURI -->
+    <div class="search-bar">
+      <div class="search-sect">
+        <input
+          type="text"
+          id="search"
+          placeholder="Caută joburi (chelner, promoter, mutare mobilă...)"
+        />
+        <button onclick="window.location.reload()">x</button>
+      </div>
+      <div class="search-results"></div>
+    </div>
+
+    <section class="tot">
+      <!-- SWIPER - CATEGORII DE JOBURI -->
+      <section class="swiperrrr">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <!-- Joburi LA EVENIMENTE -->
+            <div class="swiper-slide">
+              <div class="contentSwiper">
+                <div class="titluSwiper">
+                  <h1>Joburi la evenimente</h1>
+                  <p>
+                    Găsește rapid joburi de o zi la festivaluri, conferințe,
+                    petreceri sau campanii promoționale. Perfect pentru
+                    studenți care vor bani în plus fără să-și strice programul.
+                  </p>
+                  <a href="student-dashboard.html?type=eveniment">
+                    Vezi joburi la evenimente
+                  </a>
+                </div>
+                <img
+                  src="img/job-eveniment.png"
+                  alt="Joburi la evenimente"
+                  class="imgSwiper"
+                />
+              </div>
+            </div>
+
+            <!-- Joburi ONLINE -->
+            <div class="swiper-slide">
+              <div class="contentSwiper">
+                <div class="titluSwiper">
+                  <h1>Joburi online</h1>
+                  <p>
+                    Muncă remote: social media, editare video, administrare
+                    pagini, introducere date și alte activități online ușor de
+                    făcut de oriunde.
+                  </p>
+                  <a href="student-dashboard.html?type=online">
+                    Vezi joburi online
+                  </a>
+                </div>
+                <img
+                  src="img/job-online.png"
+                  alt="Joburi online"
+                  class="imgSwiper"
+                />
+              </div>
+            </div>
+
+            <!-- Joburi MUNCĂ FIZICĂ -->
+            <div class="swiper-slide">
+              <div class="contentSwiper">
+                <div class="titluSwiper">
+                  <h1>Joburi de muncă fizică</h1>
+                  <p>
+                    Ajută la mutări, depozite, încărcat/descărcat marfă sau alte
+                    activități fizice bine plătite, pe termen foarte scurt.
+                  </p>
+                  <a href="student-dashboard.html?type=fizic">
+                    Vezi joburi fizice
+                  </a>
+                </div>
+                <img
+                  src="img/job-fizic.png"
+                  alt="Joburi fizice"
+                  class="imgSwiper"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- dacă vrei pagination/bullets, poți adăuga aici -->
+          <!-- <div class="swiper-pagination"></div> -->
+        </div>
+
+        <script>
+          const swiper = new Swiper(".swiper", {
+            direction: "horizontal",
+            grabCursor: true,
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+            centeredSlides: false,
+            loop: true,
+            spaceBetween: 10,
+            mousewheel: { forceToAxis: true },
+            pagination: { el: ".swiper-pagination" },
+            autoplay: { delay: 8000 },
+            breakpoints: {
+              767: { slidesPerView: 1 },
+              1699: { slidesPerView: 1 },
+            },
+            speed: 700,
+            slideActiveClass: "is-active",
+            slideDuplicateActiveClass: "is-active",
+          });
+        </script>
+      </section>
+
+      <!-- SECTIUNE "DE CE SNAPJOBS?" -->
+      <section id="why">
+        <div class="why-us">
+          <h2>De ce SnapJobs?</h2>
+          <p>
+            Găsești joburi scurte, de 1–3 zile, verificate, care se potrivesc cu
+            programul tău de student. Fără contracte complicate, fără proceduri
+            greoaie.
+          </p>
+        </div>
+        <div class="why-us">
+          <h2>Siguranță & transparență</h2>
+          <p>
+            Angajatorii sunt verificați, iar fiecare job are informații clare
+            despre locație, durată și plată, ca să știi exact la ce te înscrii.
+          </p>
+        </div>
+        <div class="why-us">
+          <h2>Aplici în câteva secunde</h2>
+          <p>
+            Îți faci profilul o singură dată, apoi aplici instant la joburi cu
+            un singur click. Primești notificare când ești acceptat.
+          </p>
+        </div>
+      </section>
+
+      <!-- LISTA DE JOBURI (folosea "Produse reduse" înainte) -->
+      <div class="titluri">
+        <span>Joburi populare</span>
+      </div>
+
+      <section class="">
+        <div class="container">
+          <!-- păstrăm clasa listProduct ca să nu-ți stricăm script.js-ul;
+               în JS poți doar să tratezi aceste elemente ca "joburi" în loc de "produse" -->
+          <div class="listProduct"></div>
+        </div>
+        <script src="script.js"></script>
+      </section>
+
+      <div class="pagination">
+        <button onclick="loadMore()">Vezi mai multe joburi</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>Tipuri de joburi</h2>
+        <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
+        <a href="student-dashboard.html?type=online">Joburi online</a>
+        <a href="student-dashboard.html?type=fizic">Joburi fizice</a>
+      </div>
+      <div class="f-item">
+        <h2>SnapJobs</h2>
+        <a href="student-profile.html">Profilul meu</a>
+        <a href="">FAQ</a>
+        <a href="">Confidențialitate</a>
+        <a href="">Termeni și condiții</a>
+      </div>
+      <div class="f-item">
+        <h2>Informații</h2>
+        <a href="">Cum funcționează SnapJobs</a>
+        <a href="">Plată și colaborare</a>
+      </div>
+      <div class="f-item">
+        <h2>Contact</h2>
+        <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+        <p>Luni - Vineri: 09:00 - 18:00</p>
+        <p>București, România</p>
+      </div>
+    </footer>
+
+    <script src="animation.js"></script>
+  </body>
+</html>

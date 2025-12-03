@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapJobs – Angajatori</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="header-1">
+      <div class="logo">SnapJobs Business</div>
+      <div class="content-header">
+        <div class="side-nav seVede" style="position: static; height: auto; background: transparent; display: flex; flex-direction: row;">
+          <a href="index.html">Înapoi la Platformă</a>
+          <a href="#" class="active">Postează Job</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="tot" style="padding: 5vh;">
+      <div class="titluri">
+        <span>Postează un Job Nou</span>
+      </div>
+
+      <div class="container" style="display: flex; justify-content: center;">
+        <form id="jobForm" class="formular-1" style="width: 40vw; padding: 4vh;">
+          
+          <div class="user-box">
+            <input type="text" id="title" required />
+            <label>Titlu Job</label>
+          </div>
+
+          <div class="user-box">
+            <input type="text" id="company" required />
+            <label>Nume Companie</label>
+          </div>
+
+          <div class="user-box">
+             <!-- Simplificare: Select pentru tip -->
+            <select id="type" style="width: 100%; background: #110e15; color: white; border: 0.2vh solid #110e15; padding: 1vh; margin-bottom: 2vh;">
+                <option value="eveniment">Eveniment</option>
+                <option value="online">Online</option>
+                <option value="fizic">Muncă Fizică</option>
+            </select>
+          </div>
+
+          <div class="user-box">
+            <input type="text" id="salary" placeholder="Ex: 200 RON/zi" required />
+            <label>Salariu</label>
+          </div>
+
+          <div class="user-box">
+            <input type="text" id="location" required />
+            <label>Locație</label>
+          </div>
+
+          <div class="user-box">
+            <textarea id="description" rows="4" style="width: 100%; background: #110e15; color: #ffd700; border: 0.2vh solid #110e15; padding: 1vh;" placeholder="Descriere job..."></textarea>
+          </div>
+
+          <button type="submit" class="checkOutt">Publică Jobul</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>SnapJobs Business</h2>
+        <p>Găsește studenți motivați pentru proiectele tale.</p>
+      </div>
+    </footer>
+
+    <script src="employer-form.js"></script>
+  </body>
+</html>
