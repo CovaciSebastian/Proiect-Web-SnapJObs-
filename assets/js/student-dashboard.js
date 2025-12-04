@@ -37,7 +37,7 @@ function initMap() {
 async function loadJobs() {
     try {
         // 1. Fetch Static Jobs
-        const response = await fetch('jobs.json');
+        const response = await fetch('data/jobs.json');
         const staticJobs = await response.json();
 
         // 2. Fetch Dynamic Jobs (from Employer Dashboard)
