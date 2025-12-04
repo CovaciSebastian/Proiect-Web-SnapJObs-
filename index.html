@@ -32,28 +32,31 @@
         <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
       </div>
 
-      <!-- ICON "profil"/aplicații (poți păstra icon-ul de coș ca "număr aplicații") -->
-      <div class="icon-applications">
-        <a href="student-applications.html">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2"/>
-            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-          </svg>
-          <span id="applications-count" class="job-bubble">0</span>
-        </a>
+      <div class="header-actions">
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn btn-login">Logare</a>
+            <a href="register.html" class="auth-btn btn-signup">Înregistrare</a>
+        </div>
+        <div class="icon-applications">
+            <a href="student-applications.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span id="applications-count" class="job-bubble">0</span>
+            </a>
+        </div>
       </div>
     </header>
     <!-- MENIU LATERAL STUDENT -->
     <div class="side-nav">
       <a href="student-dashboard.html">Acasă</a>
-      <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
-      <a href="student-dashboard.html?type=online">Joburi online</a>
-      <a href="student-dashboard.html?type=fizic">Joburi muncă fizică</a>
+
       <a href="student-applications.html">Aplicațiile mele</a>
       <a href="student-profile.html">Profil</a>
-      <a href="faq.html" style="color: #D4AF37;">FAQ</a>
+      <a href="faq.html" style="color: #29b6f6;">FAQ</a>
       <a href="terms.html">Termeni și Condiții</a>
       <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
       <a href="login.html">Logout</a>
@@ -213,7 +216,7 @@
       </section>
 
       <div class="pagination">
-        <button onclick="loadMore()">Vezi mai multe joburi</button>
+        <button onclick="window.location.href='student-dashboard.html'">Vezi mai multe joburi</button>
       </div>
     </section>
 

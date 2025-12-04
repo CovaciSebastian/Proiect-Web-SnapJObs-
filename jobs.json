@@ -76,5 +76,70 @@
         "date": "2025-06-05",
         "description": "Aranjare cutii pe rafturi. Nu necesită experiență. Transport asigurat de la Metrou 1 Mai.",
         "image": "img/job-fizic.png"
+    },
+    {
+        "id": 7,
+        "title": "Staff Punct Hidratare Maraton",
+        "company": "RunBucharest",
+        "type": "eveniment",
+        "salary": "200 RON/zi",
+        "location": "Piața Constituției",
+        "lat": 44.4275,
+        "lng": 26.0920,
+        "date": "2025-06-15",
+        "description": "Împărțire apă și medalii participanților la maraton. Program 08:00 - 16:00.",
+        "image": "img/job-eveniment.png"
+    },
+    {
+        "id": 8,
+        "title": "Sampling Băutură Energizantă",
+        "company": "PromoAgency",
+        "type": "eveniment",
+        "salary": "25 RON/oră",
+        "location": "AFI Cotroceni",
+        "lat": 44.4305,
+        "lng": 26.0525,
+        "date": "2025-06-12",
+        "description": "Oferire mostre gratuite clienților din mall. Program 4 ore, flexibil după-amiaza.",
+        "image": "img/job-eveniment.png"
+    },
+    {
+        "id": 9,
+        "title": "Montare Scenă Concert",
+        "company": "StageCrew",
+        "type": "fizic",
+        "salary": "350 RON/zi",
+        "location": "Arena Națională",
+        "lat": 44.4361,
+        "lng": 26.1527,
+        "date": "2025-07-20",
+        "description": "Manipulare echipamente scenă și lumini. Muncă fizică intensă. Se oferă masă.",
+        "image": "img/job-fizic.png"
+    },
+    {
+        "id": 10,
+        "title": "Asistent Foto Nuntă",
+        "company": "MagicMoments",
+        "type": "eveniment",
+        "salary": "400 RON/zi",
+        "location": "Parcul Herăstrău",
+        "lat": 44.4705,
+        "lng": 26.0820,
+        "date": "2025-06-22",
+        "description": "Ajutor la cărat echipament și gestionat luminile pentru ședința foto.",
+        "image": "img/job-eveniment.png"
+    },
+    {
+        "id": 11,
+        "title": "Supraveghetor Stand Târg Carte",
+        "company": "BookFest",
+        "type": "eveniment",
+        "salary": "180 RON/zi",
+        "location": "Romexpo",
+        "lat": 44.4765,
+        "lng": 26.0640,
+        "date": "2025-06-01",
+        "description": "Vânzare cărți și aranjare stand. Program full-time pentru 1 zi.",
+        "image": "img/job-eveniment.png"
     }
 ]

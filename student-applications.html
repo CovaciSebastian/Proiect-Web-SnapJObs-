@@ -7,10 +7,18 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="header-styles.css">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
         .applications-container {
             max-width: 800px;
-            margin: 40px auto;
+            margin: 40px auto; /* Readuc la centrat */
             padding: 20px;
+            flex: 1; /* Ocupă tot spațiul liber */
+            width: 100%;
         }
 
         .app-card {
@@ -36,40 +44,92 @@
 </head>
 <body class="dark-theme">
 
-    <header class="header">
-        <button class="colaps" onclick="showModala()">
-            <div class="icon-cart">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-align-justify">
-                    <line x1="21" y1="10" x2="3" y2="10"></line>
-                    <line x1="21" y1="6" x2="3" y2="6"></line>
-                    <line x1="21" y1="14" x2="3" y2="14"></line>
-                    <line x1="21" y1="18" x2="3" y2="18"></line>
-                </svg>
-            </div>
-        </button>
-        <div class="logo">
-            <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 80px;">
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
         </div>
-        <nav class="nav">
-            <a href="index.html">Acasă</a>
-            <a href="student-jobs.html">Caută Joburi</a>
+      </button>
+
+      <div class="logo">
+        <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
+      </div>
+
+      <div class="header-actions">
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn btn-login">Logare</a>
+            <a href="register.html" class="auth-btn btn-signup">Înregistrare</a>
+        </div>
+        <div class="icon-applications">
             <a href="student-applications.html" class="active">
-                Aplicările Mele 
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span id="applicationCount" class="job-bubble">0</span>
             </a>
-        </nav>
+        </div>
+      </div>
     </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="index.html">Acasă</a>
+      <a href="student-dashboard.html">Găsește Joburi</a>
+
+      <a href="student-applications.html">Aplicațiile mele</a>
+      <a href="student-profile.html">Profil</a>
+      <a href="faq.html" style="color: #29b6f6;">FAQ</a>
+      <a href="terms.html">Termeni și Condiții</a>
+      <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
+      <a href="login.html">Logout</a>
+    </div>
 
 
 
     <div class="applications-container">
-        <h1 style="color: #29b6f6; margin-bottom: 30px;">Istoric Aplicări</h1>
+        <h1 class="page-title">Istoric Aplicări</h1>
         <div id="applicationsList">
             <!-- Filled by JS -->
         </div>
     </div>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>Tipuri de joburi</h2>
+        <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
+        <a href="student-dashboard.html?type=online">Joburi online</a>
+        <a href="student-dashboard.html?type=fizic">Joburi fizice</a>
+      </div>
+      <div class="f-item">
+        <h2>SnapJobs</h2>
+        <a href="student-profile.html">Profilul meu</a>
+        <a href="faq.html">FAQ</a>
+        <a href="">Confidențialitate</a>
+        <a href="terms.html">Termeni și condiții</a>
+      </div>
+      <div class="f-item">
+        <h2>Informații</h2>
+        <a href="">Cum funcționează SnapJobs</a>
+        <a href="">Plată și colaborare</a>
+      </div>
+      <div class="f-item">
+        <h2>Contact</h2>
+        <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+        <p>Luni - Vineri: 09:00 - 18:00</p>
+        <p>București, România</p>
+      </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {

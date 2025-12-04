@@ -48,13 +48,67 @@
   }
 }
 
-/* Ensure application icon is aligned */
-.icon-applications {
-    justify-self: end; /* Aligns to the end of its grid cell */
+/* ACTIONS RIGHT (Auth + Icon) */
+.header-actions {
+    justify-self: end;
     display: flex;
     align-items: center;
-    gap: 5px; /* Adjust spacing between icon and count */
+    gap: 20px;
 }
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-btn {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-login {
+    color: #fff;
+}
+
+.btn-login:hover {
+    color: #29b6f6;
+}
+
+.btn-signup {
+    background-color: #29b6f6;
+    color: #000;
+}
+
+.btn-signup:hover {
+    background-color: #1a96d4;
+}
+
+.icon-applications {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.icon-applications a {
+    color: white; /* Default color for application icon text */
+    text-decoration: none; /* Remove underline */
+}
+
+.icon-applications a.active {
+    color: #29b6f6; /* Culoarea albastră deschisă pentru linkul activ */
+}
+
+@media (max-width: 768px) {
+    .auth-buttons {
+        display: none; /* Hide auth buttons on mobile, keep icon */
+    }
+}
+
 
 /* Adjust general 'div' styles that might be affecting header elements */
 .header-1 div {

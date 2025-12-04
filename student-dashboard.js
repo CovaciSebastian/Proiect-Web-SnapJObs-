@@ -46,8 +46,23 @@ async function loadJobs() {
         // Combine
         allJobs = [...staticJobs, ...storedJobs];
 
-        // Initial Render
-        renderJobs(allJobs);
+        // 3. Check URL Params for Filters
+        const urlParams = new URLSearchParams(window.location.search);
+        const typeParam = urlParams.get('type');
+
+        if (typeParam) {
+            const typeSelect = document.getElementById('typeFilter');
+            if (typeSelect) {
+                typeSelect.value = typeParam;
+                // Apply filters immediately if a param exists
+                applyFilters();
+            } else {
+                renderJobs(allJobs);
+            }
+        } else {
+            // Initial Render (All Jobs)
+            renderJobs(allJobs);
+        }
 
     } catch (error) {
         console.error('Error loading jobs:', error);
@@ -102,49 +117,56 @@ function renderJobs(jobs) {
     });
 }
 
-// Filter Logic
-function setupFilters() {
+// Global Filter Function
+function applyFilters() {
     const typeSelect = document.getElementById('typeFilter');
     const dateInput = document.getElementById('dateFilter');
     const radiusInput = document.getElementById('radiusFilter');
     const radiusValue = document.getElementById('radiusValue');
 
-    const applyFilters = () => {
-        const type = typeSelect.value;
-        const date = dateInput.value;
-        const radius = parseInt(radiusInput.value);
+    const type = typeSelect.value;
+    const date = dateInput.value;
+    const radius = parseInt(radiusInput.value);
 
+    if (radiusValue) {
         radiusValue.textContent = `${radius} km`;
+    }
 
-        const filtered = allJobs.filter(job => {
-            // Type Filter
-            if (type !== 'all' && job.type !== type) return false;
+    const filtered = allJobs.filter(job => {
+        // Type Filter
+        if (type !== 'all' && job.type !== type) return false;
 
-            // Date Filter (Exact match for now, could be >=)
-            if (date && job.date && job.date !== date) return false;
+        // Date Filter (Exact match for now, could be >=)
+        if (date && job.date && job.date !== date) return false;
 
-            // Radius Filter
-            if (job.lat && job.lng) {
-                const dist = getDistance(userLat, userLng, job.lat, job.lng);
-                if (dist > radius) return false;
-            }
+        // Radius Filter
+        if (job.lat && job.lng) {
+            const dist = getDistance(userLat, userLng, job.lat, job.lng);
+            if (dist > radius) return false;
+        }
 
-            return true;
-        });
+        return true;
+    });
 
-        renderJobs(filtered);
-    };
+    renderJobs(filtered);
+}
 
-    typeSelect.addEventListener('change', applyFilters);
-    dateInput.addEventListener('change', applyFilters);
-    radiusInput.addEventListener('input', applyFilters);
+// Filter Logic Setup
+function setupFilters() {
+    const typeSelect = document.getElementById('typeFilter');
+    const dateInput = document.getElementById('dateFilter');
+    const radiusInput = document.getElementById('radiusFilter');
+
+    if(typeSelect) typeSelect.addEventListener('change', applyFilters);
+    if(dateInput) dateInput.addEventListener('change', applyFilters);
+    if(radiusInput) radiusInput.addEventListener('input', applyFilters);
 }
 
 function resetFilters() {
     document.getElementById('typeFilter').value = 'all';
     document.getElementById('dateFilter').value = '';
     document.getElementById('radiusFilter').value = 50;
-    renderJobs(allJobs);
+    applyFilters(); // Use applyFilters instead of renderJobs to update logic consistently
 }
 
 // Apply Logic
