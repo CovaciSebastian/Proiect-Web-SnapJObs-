@@ -69,7 +69,7 @@
             <a href="../../register.html" class="auth-btn btn-signup">Înregistrare</a>
         </div>
         <div class="icon-applications">
-            <a href="student-applications.html">
+            <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -114,14 +114,13 @@
       <div class="f-item">
         <h2>SnapJobs</h2>
         <a href="profile.html">Profilul meu</a>
-        <a href="faq.html">FAQ</a>
-        <a href="../../privacy.html">Confidențialitate</a>
-        <a href="../../terms.html">Termeni și condiții</a>
       </div>
       <div class="f-item">
         <h2>Informații</h2>
         <a href="../../how-it-works.html">Cum funcționează SnapJobs</a>
-        <a href="">Plată și colaborare</a>
+        <a href="../../faq.html">FAQ</a>
+        <a href="../../privacy.html">Confidențialitate</a>
+        <a href="../../terms.html">Termeni și condiții</a>
       </div>
       <div class="f-item">
         <h2>Contact</h2>
@@ -132,12 +131,19 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Funcția principală pentru randarea și gestionarea aplicațiilor
+        async function renderApplications() {
             const list = document.getElementById('applicationsList');
-            const appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+
+            list.innerHTML = ''; // Golește lista înainte de re-randare
 
             if (appliedIds.length === 0) {
                 list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
+                // Asigură-te că și contorul din header este 0
+                if (window.updateHeaderButtons) {
+                    window.updateHeaderButtons();
+                }
                 return;
             }
 
@@ -164,13 +170,39 @@
                         <p style="color: #aaa;">${job.company}</p>
                         <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
                     </div>
-                    <div style="text-align: right;">
+                    <div style="text-align: right; display: flex; flex-direction: column; gap: 10px;">
                         <div class="app-status">Aplicat</div>
-                        <div style="color: #fff; font-weight: bold; margin-top: 10px;">${job.salary}</div>
+                        <div style="color: #fff; font-weight: bold;">${job.salary}</div>
+                        <button class="remove-app-btn" onclick="removeApplication(${job.id})">Anulează Aplicarea</button>
                     </div>
                 `;
                 list.appendChild(card);
             });
+
+            // Actualizează contorul din header după randare
+            if (window.updateHeaderButtons) { // Presupune că updateHeaderButtons este globală
+                window.updateHeaderButtons();
+            }
+        }
+
+        // Funcția de ștergere a unei aplicații
+        function removeApplication(jobIdToRemove) {
+            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+            
+            const initialLength = appliedIds.length;
+            appliedIds = appliedIds.filter(id => id !== jobIdToRemove); // Păstrează doar ID-urile care NU se potrivesc
+            
+            if (appliedIds.length < initialLength) { // Dacă s-a eliminat ceva
+                localStorage.setItem('myApplications', JSON.stringify(appliedIds));
+                alert('Aplicația a fost anulată.');
+                renderApplications(); // Re-randare lista după eliminare
+            } else {
+                alert('Aplicația nu a putut fi găsită.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApplications(); // Apelez funcția la încărcarea paginii
         });
     </script>
     <script src="../../assets/js/sidebar.js"></script>
