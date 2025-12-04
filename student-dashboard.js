@@ -157,6 +157,16 @@ function setupFilters() {
     const dateInput = document.getElementById('dateFilter');
     const radiusInput = document.getElementById('radiusFilter');
 
+    // Set min date to today
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+    if (dateInput) {
+        dateInput.min = minDate;
+    }
+
     if(typeSelect) typeSelect.addEventListener('change', applyFilters);
     if(dateInput) dateInput.addEventListener('change', applyFilters);
     if(radiusInput) radiusInput.addEventListener('input', applyFilters);

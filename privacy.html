@@ -3,44 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapJobs - Aplicările Mele</title>
+    <title>SnapJobs - Politica de Confidențialitate</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="header-styles.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .applications-container {
-            max-width: 800px;
-            margin: 40px auto; /* Readuc la centrat */
-            padding: 20px;
-            flex: 1; /* Ocupă tot spațiul liber */
-            width: 100%;
-        }
-
-        .app-card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .app-status {
-            background: rgba(41, 182, 246, 0.2); /* Light blue with opacity */
-            color: #29b6f6;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            border: 1px solid #29b6f6;
-        }
-    </style>
 </head>
 <body class="dark-theme">
 
@@ -82,27 +47,49 @@
       </div>
     </header>
 
-    <!-- MENIU LATERAL STUDENT -->
+    <!-- MENIU LATERAL (Sidebar) - Fără link Confidențialitate -->
     <div class="side-nav">
       <a href="index.html">Acasă</a>
       <a href="student-dashboard.html">Găsește Joburi</a>
-
       <a href="student-applications.html">Aplicațiile mele</a>
       <a href="student-profile.html">Profil</a>
-      <a href="faq.html" style="color: #29b6f6;">FAQ</a>
+      <a href="faq.html">FAQ</a>
       <a href="terms.html">Termeni și Condiții</a>
       <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
       <a href="login.html">Logout</a>
     </div>
 
+    <section class="tot" style="min-height: 60vh; padding-top: 50px;">
+      <div class="terms-container"> <!-- Reusing terms container style for consistency -->
+        <h1 class="terms-title">Politica de Confidențialitate</h1>
 
+        <h2>1. Informații Generale</h2>
+        <p>Confidențialitatea datelor dumneavoastră este foarte importantă pentru noi. Această politică explică ce date colectăm și cum le folosim atunci când utilizați platforma SnapJobs.</p>
 
-    <div class="applications-container">
-        <h1 class="page-title">Istoric Aplicări</h1>
-        <div id="applicationsList">
-            <!-- Filled by JS -->
-        </div>
-    </div>
+        <h2>2. Datele Colectate</h2>
+        <p>Colectăm informații pe care ni le furnizați direct, cum ar fi: Nume, Email, Telefon, și informații din profilul de student sau angajator. De asemenea, putem colecta date de utilizare și locație pentru funcționalitatea hărții.</p>
+
+        <h2>3. Utilizarea Datelor</h2>
+        <p>Folosim datele colectate pentru:</p>
+        <ul>
+            <li style="margin-left: 20px;">A facilita legătura dintre studenți și angajatori.</li>
+            <li style="margin-left: 20px;">A vă oferi joburi relevante în funcție de locație.</li>
+            <li style="margin-left: 20px;">A îmbunătăți funcționalitatea platformei.</li>
+        </ul>
+
+        <h2>4. Partajarea Datelor</h2>
+        <p>Nu vindem datele dumneavoastră personale către terți. Datele pot fi partajate doar cu angajatorii la care aplicați pentru un job, strict în scopul recrutării.</p>
+
+        <h2>5. Securitatea Datelor</h2>
+        <p>Luăm măsuri rezonabile pentru a proteja informațiile dumneavoastră împotriva accesului neautorizat, pierderii sau modificării.</p>
+
+        <h2>6. Drepturile Dumneavoastră</h2>
+        <p>Aveți dreptul de a solicita accesul, rectificarea sau ștergerea datelor dumneavoastră personale. Pentru orice solicitare, ne puteți contacta.</p>
+
+        <h2>7. Contact</h2>
+        <p>Pentru întrebări legate de confidențialitate, scrieți-ne la contact@snapjobs.ro.</p>
+      </div>
+    </section>
 
     <footer class="footer">
       <div class="f-item">
@@ -115,7 +102,7 @@
         <h2>SnapJobs</h2>
         <a href="student-profile.html">Profilul meu</a>
         <a href="faq.html">FAQ</a>
-        <a href="privacy.html">Confidențialitate</a>
+        <a href="privacy.html" style="color: #29b6f6;">Confidențialitate</a>
         <a href="terms.html">Termeni și condiții</a>
       </div>
       <div class="f-item">
@@ -131,48 +118,6 @@
       </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const list = document.getElementById('applicationsList');
-            const appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
-
-            if (appliedIds.length === 0) {
-                list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
-                return;
-            }
-
-            // Fetch all jobs
-            let allJobs = [];
-            try {
-                const res = await fetch('jobs.json');
-                const staticJobs = await res.json();
-                const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
-                allJobs = [...staticJobs, ...newJobs];
-            } catch (e) {
-                console.error("Err loading jobs", e);
-            }
-
-            // Filter applied jobs
-            const appliedJobs = allJobs.filter(job => appliedIds.includes(job.id));
-
-            appliedJobs.forEach(job => {
-                const card = document.createElement('div');
-                card.className = 'app-card';
-                card.innerHTML = `
-                    <div>
-                        <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
-                        <p style="color: #aaa;">${job.company}</p>
-                        <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="app-status">Aplicat</div>
-                        <div style="color: #fff; font-weight: bold; margin-top: 10px;">${job.salary}</div>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        });
-    </script>
     <script src="sidebar.js"></script>
 </body>
 </html>
