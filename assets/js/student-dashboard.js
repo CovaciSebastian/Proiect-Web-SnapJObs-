@@ -109,9 +109,41 @@ function renderJobs(jobs) {
 
         // 2. Render Map Marker (if coords exist)
         if (job.lat && job.lng) {
+            const myApplications = JSON.parse(localStorage.getItem('myApplications')) || [];
+            const hasApplied = myApplications.includes(job.id);
+            const btnClass = hasApplied ? "map-apply-btn applied" : "map-apply-btn";
+            const btnDisabled = hasApplied ? "disabled" : "";
+            const btnText = hasApplied ? "Ai aplicat" : "Aplică Acum";
+
+            const popupContent = `
+                <div class="map-popup-content">
+                    <h4 class="map-popup-title">${job.title}</h4>
+                    <p class="map-popup-info">💰 ${job.salary}</p>
+                    <p class="map-popup-info">📍 ${job.location}</p>
+                    <p class="map-popup-info">🏢 ${job.company}</p>
+                    <p class="map-popup-info">📅 ${job.type.toUpperCase()}</p>
+                    <button id="applyBtn_${job.id}" class="${btnClass}" ${btnDisabled}>${btnText}</button>
+                </div>
+            `;
+
             const marker = L.marker([job.lat, job.lng])
-                .bindPopup(`<b>${job.title}</b><br>${job.salary}`)
+                .bindPopup(popupContent)
                 .addTo(map);
+
+            marker.on('popupopen', () => {
+                const popupBtn = document.getElementById(`applyBtn_${job.id}`);
+                if (popupBtn) {
+                    popupBtn.onclick = () => {
+                        applyToJob(job.id);
+                        if (!popupBtn.disabled) {
+                            popupBtn.innerText = "Ai aplicat";
+                            popupBtn.classList.add('applied');
+                            popupBtn.disabled = true;
+                        }
+                        map.closePopup();
+                    };
+                }
+            });
             markers.push(marker);
         }
     });

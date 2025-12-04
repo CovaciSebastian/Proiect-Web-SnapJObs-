@@ -89,6 +89,19 @@
     background-color: #1a96d4;
 }
 
+.profile-link {
+    display: flex; /* Ensure profile link is always flex for consistency */
+}
+
+.btn-profile {
+    background-color: #ffd700; /* Example color for profile button */
+    color: #000;
+}
+
+.btn-profile:hover {
+    background-color: #e6c200;
+}
+
 .icon-applications {
     display: flex;
     align-items: center;
