@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // 1. Fetch all jobs
-        const res = await fetch('data/jobs.json'); // Adjusted path
+        const res = await fetch('../../data/jobs.json'); // Adjusted path
         const staticJobs = await res.json();
         const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
         const allJobs = [...staticJobs, ...newJobs];
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (imgPath && !imgPath.startsWith('assets/') && !imgPath.startsWith('http')) {
              // If it's a relative path from root, it should already be correct for root assets/img
              // But if `job.image` is still `img/job-type.png`, we need to change it to `assets/img/job-type.png`
-             imgPath = 'assets/' + imgPath; // Assuming job.image is "img/..."
+             imgPath = '../../assets/' + imgPath; // Assuming job.image is "img/..."
         }
 
 

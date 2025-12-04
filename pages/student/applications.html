@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnapJobs - Aplicările Mele</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/header-styles.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/header-styles.css">
     <style>
         body {
             display: flex;
@@ -60,13 +60,13 @@
       </button>
 
       <div class="logo">
-        <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
+        <img src="../../assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo">
       </div>
 
       <div class="header-actions">
         <div class="auth-buttons">
-            <a href="login.html" class="auth-btn btn-login">Logare</a>
-            <a href="register.html" class="auth-btn btn-signup">Înregistrare</a>
+            <a href="../../login.html" class="auth-btn btn-login">Logare</a>
+            <a href="../../register.html" class="auth-btn btn-signup">Înregistrare</a>
         </div>
         <div class="icon-applications">
             <a href="student-applications.html">
@@ -84,14 +84,14 @@
 
     <!-- MENIU LATERAL STUDENT -->
     <div class="side-nav">
-      <a href="index.html">Acasă</a>
-      <a href="student-dashboard.html">Găsește Joburi</a>
+      <a href="../../index.html">Acasă</a>
+      <a href="dashboard.html">Găsește Joburi</a>
 
       <a href="student-applications.html">Aplicațiile mele</a>
-      <a href="student-profile.html">Profil</a>
-      <a href="faq.html" style="color: #29b6f6;">FAQ</a>
-      <a href="terms.html">Termeni și Condiții</a>
-      <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
+      <a href="profile.html">Profil</a>
+      <a href="../../faq.html" style="color: #29b6f6;">FAQ</a>
+      <a href="../../terms.html">Termeni și Condiții</a>
+      <a href="../employer/dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
       <a href="login.html">Logout</a>
     </div>
 
@@ -107,20 +107,20 @@
     <footer class="footer">
       <div class="f-item">
         <h2>Tipuri de joburi</h2>
-        <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
-        <a href="student-dashboard.html?type=online">Joburi online</a>
-        <a href="student-dashboard.html?type=fizic">Joburi fizice</a>
+        <a href="dashboard.html?type=eveniment">Joburi evenimente</a>
+        <a href="dashboard.html?type=online">Joburi online</a>
+        <a href="dashboard.html?type=fizic">Joburi fizice</a>
       </div>
       <div class="f-item">
         <h2>SnapJobs</h2>
-        <a href="student-profile.html">Profilul meu</a>
+        <a href="profile.html">Profilul meu</a>
         <a href="faq.html">FAQ</a>
-        <a href="privacy.html">Confidențialitate</a>
-        <a href="terms.html">Termeni și condiții</a>
+        <a href="../../privacy.html">Confidențialitate</a>
+        <a href="../../terms.html">Termeni și condiții</a>
       </div>
       <div class="f-item">
         <h2>Informații</h2>
-        <a href="how-it-works.html">Cum funcționează SnapJobs</a>
+        <a href="../../how-it-works.html">Cum funcționează SnapJobs</a>
         <a href="">Plată și colaborare</a>
       </div>
       <div class="f-item">
@@ -144,7 +144,7 @@
             // Fetch all jobs
             let allJobs = [];
             try {
-                const res = await fetch('data/jobs.json');
+                const res = await fetch('../../data/jobs.json');
                 const staticJobs = await res.json();
                 const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
                 allJobs = [...staticJobs, ...newJobs];
@@ -173,6 +173,6 @@
             });
         });
     </script>
-    <script src="assets/js/sidebar.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
 </body>
 </html>
