@@ -5,6 +5,8 @@ html {
   margin: 0;
   background-color: #110e15;
   color:#EEEEEE;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  width: 100%;
 }
 
   .why-us {
@@ -1327,4 +1329,44 @@ input:-webkit-autofill:active {
   padding: 15px 0;
   color: #ccc;
   line-height: 1.6;
+}
+
+/* ===========================
+   TERMS AND CONDITIONS STYLES
+   =========================== */
+.terms-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px;
+  color: #eee;
+  background-color: #1a1620;
+  border-radius: 8px;
+  box-shadow: #eeeeee30 0px 7px 29px 0px;
+  line-height: 1.6;
+}
+
+.terms-title {
+  text-align: center;
+  font-size: 2.8rem;
+  color: #D4AF37;
+  margin-bottom: 40px;
+}
+
+.terms-container h2 {
+  color: #D4AF37;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+.terms-container h3 {
+  color: #bbb;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.terms-container p {
+  margin-bottom: 15px;
+  font-size: 1rem;
 }

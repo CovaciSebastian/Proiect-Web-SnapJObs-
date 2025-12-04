@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnapJobs - Aplicările Mele</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header-styles.css">
     <style>
         .applications-container {
             max-width: 800px;
@@ -36,6 +37,19 @@
 <body class="dark-theme">
 
     <header class="header">
+        <button class="colaps" onclick="showModala()">
+            <div class="icon-cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-align-justify">
+                    <line x1="21" y1="10" x2="3" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="21" y1="18" x2="3" y2="18"></line>
+                </svg>
+            </div>
+        </button>
         <div class="logo">
             <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 80px;">
         </div>
@@ -47,6 +61,8 @@
             </a>
         </nav>
     </header>
+
+
 
     <div class="applications-container">
         <h1 style="color: #29b6f6; margin-bottom: 30px;">Istoric Aplicări</h1>
@@ -97,5 +113,6 @@
             });
         });
     </script>
+    <script src="sidebar.js"></script>
 </body>
 </html>

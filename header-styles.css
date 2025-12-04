@@ -5,7 +5,6 @@
   padding: 1vh 2vw; /* Consistent padding */
   width: 100%;
   box-sizing: border-box; /* Include padding in width */
-  margin-top: -65px; /* Lift the header by another 25px (total -65px) */
 }
 
 .colaps {
@@ -35,7 +34,18 @@
 }
 
 .header-1 .logo img {
-    height: 190px !important; /* Increase logo height by 30px */
+    height: 190px !important; /* Target height */
+    max-height: 190px;
+    width: auto; /* Maintain aspect ratio */
+    max-width: 60vw; /* Ensure it doesn't overflow horizontally */
+    object-fit: contain;
+}
+
+/* Responsive adjustment for smaller screens */
+@media only screen and (max-width: 768px) {
+  .header-1 .logo img {
+      height: 80px !important; /* Smaller logo on mobile to prevent layout break */
+  }
 }
 
 /* Ensure application icon is aligned */

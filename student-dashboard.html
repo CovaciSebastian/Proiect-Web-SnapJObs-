@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnapJobs - Găsește Joburi</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header-styles.css">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -100,20 +101,52 @@
 </head>
 <body class="dark-theme">
 
-    <header class="header">
-        <div class="logo">
-            <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
         </div>
-        <nav class="nav">
-            <a href="index.html">Acasă</a>
-            <a href="student-jobs.html" class="active">Caută Joburi</a>
-            <a href="student-applications.html" class="icon-cart">
-                Aplicările Mele 
-                <span id="applicationCount" class="count-badge">0</span>
-            </a>
-            <a href="employer-dashboard.html" style="margin-left: 20px; color: #888; font-size: 0.9em;">(Angajator)</a>
-        </nav>
+      </button>
+
+      <div class="logo">
+        <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
+      </div>
+
+      <div class="icon-applications">
+        <a href="student-applications.html">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          </svg>
+          <span id="applicationCount" class="job-bubble">0</span>
+        </a>
+      </div>
     </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="index.html">Acasă</a>
+      <a href="student-dashboard.html">Găsește Joburi</a>
+      <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
+      <a href="student-dashboard.html?type=online">Joburi online</a>
+      <a href="student-dashboard.html?type=fizic">Joburi muncă fizică</a>
+      <a href="student-applications.html">Aplicațiile mele</a>
+      <a href="student-profile.html">Profil</a>
+      <a href="faq.html" style="color: #D4AF37;">FAQ</a>
+      <a href="terms.html">Termeni și Condiții</a>
+      <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
+      <a href="login.html">Logout</a>
+    </div>
 
     <div class="dashboard-container">
         <!-- Sidebar Filters -->
@@ -158,5 +191,6 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="student-dashboard.js"></script>
+    <script src="sidebar.js"></script>
 </body>
 </html>

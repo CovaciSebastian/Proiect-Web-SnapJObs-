@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Termeni și Condiții | SnapJobs</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="header-styles.css" />
+  </head>
+  <body>
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+
+      <div class="logo">
+        <img src="assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo" style="height: 160px;">
+      </div>
+
+      <div class="icon-applications">
+        <a href="student-applications.html">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          </svg>
+          <span id="applications-count" class="job-bubble">0</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="index.html">Acasă</a>
+      <a href="student-dashboard.html">Găsește Joburi</a>
+      <a href="student-applications.html">Aplicațiile mele</a>
+      <a href="student-profile.html">Profil</a>
+      <a href="faq.html">FAQ</a>
+      <a href="terms.html" style="color: #D4AF37;">Termeni și Condiții</a>
+      <a href="employer-dashboard.html" style="color: #29b6f6;">Zona Angajatori</a>
+      <a href="login.html">Logout</a>
+    </div>
+
+
+
+    <section class="tot" style="min-height: 60vh; padding-top: 50px;">
+      <div class="terms-container">
+        <h1 class="terms-title">Termeni și Condiții</h1>
+
+        <h2>1. Acceptarea Termenilor</h2>
+        <p>Prin accesarea și utilizarea platformei SnapJobs, sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările aplicabile. Dacă nu sunteți de acord cu acești termeni, nu utilizați platforma.</p>
+
+        <h2>2. Modificări ale Termenilor</h2>
+        <p>SnapJobs își rezervă dreptul de a modifica acești Termeni și Condiții în orice moment. Modificările vor intra în vigoare imediat după publicarea lor pe platformă. Utilizarea continuă a platformei după orice astfel de modificări constituie acceptarea dvs. a noilor Termeni și Condiții.</p>
+
+        <h2>3. Utilizarea Platformei</h2>
+        <h3>3.1. Eligibilitate</h3>
+        <p>Serviciile SnapJobs sunt destinate studenților cu vârsta de minim 16 ani. Prin utilizarea platformei, declarați că îndepliniți cerințele de eligibilitate.</p>
+        <h3>3.2. Contul de Utilizator</h3>
+        <p>Sunteți responsabil pentru menținerea confidențialității datelor contului dvs. și pentru toate activitățile care au loc sub contul dvs. Notificați imediat SnapJobs despre orice utilizare neautorizată a contului dvs.</p>
+        <h3>3.3. Comportament Interzis</h3>
+        <p>Este interzisă utilizarea platformei pentru orice scop ilegal sau neautorizat. Nu veți posta conținut defăimător, hărțuitor, amenințător, obscen sau altfel inacceptabil.</p>
+
+        <h2>4. Postarea de Joburi (pentru Angajatori)</h2>
+        <p>Angajatorii sunt responsabili pentru acuratețea și legalitatea joburilor postate. SnapJobs își rezervă dreptul de a elimina orice anunț considerat neadecvat sau care încalcă acești termeni.</p>
+
+        <h2>5. Limitarea Răspunderii</h2>
+        <p>SnapJobs nu este responsabil pentru relațiile dintre utilizatori (studenți și angajatori) sau pentru rezultatele joburilor. Platforma acționează doar ca un intermediar. Nu garantăm disponibilitatea sau calitatea joburilor postate.</p>
+
+        <h2>6. Drepturi de Proprietate Intelectuală</h2>
+        <p>Tot conținutul de pe platforma SnapJobs (texte, grafice, logo-uri) este proprietatea SnapJobs sau a licențiatorilor săi și este protejat de legile privind drepturile de autor și proprietatea intelectuală.</p>
+
+        <h2>7. Legea Aplicabilă</h2>
+        <p>Acești Termeni și Condiții sunt guvernați de legile din România. Orice dispute vor fi soluționate de instanțele competente din România.</p>
+
+        <h2>8. Contact</h2>
+        <p>Pentru orice întrebări referitoare la acești Termeni și Condiții, ne puteți contacta la contact@snapjobs.ro.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>Tipuri de joburi</h2>
+        <a href="student-dashboard.html?type=eveniment">Joburi evenimente</a>
+        <a href="student-dashboard.html?type=online">Joburi online</a>
+        <a href="student-dashboard.html?type=fizic">Joburi fizice</a>
+      </div>
+      <div class="f-item">
+        <h2>SnapJobs</h2>
+        <a href="student-profile.html">Profilul meu</a>
+        <a href="faq.html">FAQ</a>
+        <a href="terms.html" style="color: #D4AF37;">Termeni și Condiții</a>
+        <a href="">Confidențialitate</a>
+      </div>
+      <div class="f-item">
+        <h2>Contact</h2>
+        <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+        <p>Luni - Vineri: 09:00 - 18:00</p>
+      </div>
+    </footer>
+
+    <script src="sidebar.js"></script>
+    <script>
+      // Poate fi necesar un script aici dacă se adaugă funcționalități interactive,
+      // dar pentru text simplu nu este nevoie.
+    </script>
+  </body>
+</html>
