@@ -6,6 +6,7 @@
   height: 100px; /* Fixed height for the header */
   width: 100%;
   box-sizing: border-box; /* Include padding in width */
+  background-color: #110e15; /* Explicitly set background color */
 }
 
 .colaps {
