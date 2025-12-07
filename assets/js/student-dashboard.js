@@ -27,8 +27,8 @@ function initMap() {
 
     // Add User Marker
     L.circle([userLat, userLng], {
-        color: '#D4AF37',
-        fillColor: '#D4AF37',
+        color: '#29b6f6',
+        fillColor: '#29b6f6',
         fillOpacity: 0.2,
         radius: 5000 // Default visual radius
     }).addTo(map);
@@ -37,7 +37,7 @@ function initMap() {
 async function loadJobs() {
     try {
         // 1. Fetch Static Jobs
-        const response = await fetch('jobs.json');
+        const response = await fetch('../../data/jobs.json');
         const staticJobs = await response.json();
 
         // 2. Fetch Dynamic Jobs (from Employer Dashboard)
@@ -46,8 +46,23 @@ async function loadJobs() {
         // Combine
         allJobs = [...staticJobs, ...storedJobs];
 
-        // Initial Render
-        renderJobs(allJobs);
+        // 3. Check URL Params for Filters
+        const urlParams = new URLSearchParams(window.location.search);
+        const typeParam = urlParams.get('type');
+
+        if (typeParam) {
+            const typeSelect = document.getElementById('typeFilter');
+            if (typeSelect) {
+                typeSelect.value = typeParam;
+                // Apply filters immediately if a param exists
+                applyFilters();
+            } else {
+                renderJobs(allJobs);
+            }
+        } else {
+            // Initial Render (All Jobs)
+            renderJobs(allJobs);
+        }
 
     } catch (error) {
         console.error('Error loading jobs:', error);
@@ -74,7 +89,7 @@ function renderJobs(jobs) {
         card.innerHTML = `
             <div class="job-card-content">
                 <h3 style="color: #fff; margin: 0 0 5px 0;">${job.title}</h3>
-                <div style="color: #D4AF37; font-size: 0.9em; margin-bottom: 5px;">${job.company}</div>
+                <div style="color: #29b6f6; font-size: 0.9em; margin-bottom: 5px;">${job.company}</div>
                 <div style="color: #ccc; font-size: 0.9em; margin-bottom: 5px;">
                     📍 ${job.location} • 📅 ${job.date || 'Flexibil'}
                 </div>
@@ -82,10 +97,10 @@ function renderJobs(jobs) {
                 <p style="color: #aaa; font-size: 0.85em; margin-top: 8px;">${job.description}</p>
             </div>
             <div class="job-card-actions">
-                <span class="job-type-badge" style="background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-bottom: 10px; border: 1px solid #D4AF37;">
+                <span class="job-type-badge" style="background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-bottom: 10px; border: 1px solid #29b6f6;">
                     ${job.type.toUpperCase()}
                 </span>
-                <button onclick="applyToJob(${job.id})" style="background: #D4AF37; color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px;">
+                <button onclick="applyToJob(${job.id})" style="background: #29b6f6; color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px;">
                     Aplică Acum
                 </button>
             </div>
@@ -94,57 +109,106 @@ function renderJobs(jobs) {
 
         // 2. Render Map Marker (if coords exist)
         if (job.lat && job.lng) {
+            const myApplications = JSON.parse(localStorage.getItem('myApplications')) || [];
+            const hasApplied = myApplications.includes(job.id);
+            const btnClass = hasApplied ? "map-apply-btn applied" : "map-apply-btn";
+            const btnDisabled = hasApplied ? "disabled" : "";
+            const btnText = hasApplied ? "Ai aplicat" : "Aplică Acum";
+
+            const popupContent = `
+                <div class="map-popup-content">
+                    <h4 class="map-popup-title">${job.title}</h4>
+                    <p class="map-popup-info">💰 ${job.salary}</p>
+                    <p class="map-popup-info">📍 ${job.location}</p>
+                    <p class="map-popup-info">🏢 ${job.company}</p>
+                    <p class="map-popup-info">📅 ${job.type.toUpperCase()}</p>
+                    <button id="applyBtn_${job.id}" class="${btnClass}" ${btnDisabled}>${btnText}</button>
+                </div>
+            `;
+
             const marker = L.marker([job.lat, job.lng])
-                .bindPopup(`<b>${job.title}</b><br>${job.salary}`)
+                .bindPopup(popupContent)
                 .addTo(map);
+
+            marker.on('popupopen', () => {
+                const popupBtn = document.getElementById(`applyBtn_${job.id}`);
+                if (popupBtn) {
+                    popupBtn.onclick = () => {
+                        applyToJob(job.id);
+                        if (!popupBtn.disabled) {
+                            popupBtn.innerText = "Ai aplicat";
+                            popupBtn.classList.add('applied');
+                            popupBtn.disabled = true;
+                        }
+                        map.closePopup();
+                    };
+                }
+            });
             markers.push(marker);
         }
     });
 }
 
-// Filter Logic
-function setupFilters() {
+// Global Filter Function
+function applyFilters() {
     const typeSelect = document.getElementById('typeFilter');
     const dateInput = document.getElementById('dateFilter');
     const radiusInput = document.getElementById('radiusFilter');
     const radiusValue = document.getElementById('radiusValue');
 
-    const applyFilters = () => {
-        const type = typeSelect.value;
-        const date = dateInput.value;
-        const radius = parseInt(radiusInput.value);
+    const type = typeSelect.value;
+    const date = dateInput.value;
+    const radius = parseInt(radiusInput.value);
 
+    if (radiusValue) {
         radiusValue.textContent = `${radius} km`;
+    }
 
-        const filtered = allJobs.filter(job => {
-            // Type Filter
-            if (type !== 'all' && job.type !== type) return false;
+    const filtered = allJobs.filter(job => {
+        // Type Filter
+        if (type !== 'all' && job.type !== type) return false;
 
-            // Date Filter (Exact match for now, could be >=)
-            if (date && job.date && job.date !== date) return false;
+        // Date Filter (Exact match for now, could be >=)
+        if (date && job.date && job.date !== date) return false;
 
-            // Radius Filter
-            if (job.lat && job.lng) {
-                const dist = getDistance(userLat, userLng, job.lat, job.lng);
-                if (dist > radius) return false;
-            }
+        // Radius Filter
+        if (job.lat && job.lng) {
+            const dist = getDistance(userLat, userLng, job.lat, job.lng);
+            if (dist > radius) return false;
+        }
 
-            return true;
-        });
+        return true;
+    });
 
-        renderJobs(filtered);
-    };
+    renderJobs(filtered);
+}
 
-    typeSelect.addEventListener('change', applyFilters);
-    dateInput.addEventListener('change', applyFilters);
-    radiusInput.addEventListener('input', applyFilters);
+// Filter Logic Setup
+function setupFilters() {
+    const typeSelect = document.getElementById('typeFilter');
+    const dateInput = document.getElementById('dateFilter');
+    const radiusInput = document.getElementById('radiusFilter');
+
+    // Set min date to today
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+    if (dateInput) {
+        dateInput.min = minDate;
+    }
+
+    if(typeSelect) typeSelect.addEventListener('change', applyFilters);
+    if(dateInput) dateInput.addEventListener('change', applyFilters);
+    if(radiusInput) radiusInput.addEventListener('input', applyFilters);
 }
 
 function resetFilters() {
     document.getElementById('typeFilter').value = 'all';
     document.getElementById('dateFilter').value = '';
     document.getElementById('radiusFilter').value = 50;
-    renderJobs(allJobs);
+    applyFilters(); // Use applyFilters instead of renderJobs to update logic consistently
 }
 
 // Apply Logic

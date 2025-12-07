@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+
+      <div class="logo">
+        <a href="../../index.html"><img src="../../assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo"></a>
+      </div>
+
+      <div class="header-actions">
+        <div class="auth-buttons">
+            <a href="../../login.html" class="auth-btn btn-login">Logare</a>
+            <a href="../../register.html" class="auth-btn btn-signup">Înregistrare</a>
+        </div>
+        <div class="icon-applications">
+            <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span id="applicationCount" class="job-bubble">0</span>
+            </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="../../index.html" onclick="handleSidebarLinkClick(event, 'index.html')">Acasă</a>
+      <a href="dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/student/dashboard.html')">Găsește Joburi</a>
+      <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">Aplicațiile mele</a>
+      <a href="profile.html" onclick="handleSidebarLinkClick(event, 'pages/student/profile.html')">Profilul meu</a>
+      <a href="../../faq.html" onclick="handleSidebarLinkClick(event, 'faq.html')">FAQ</a>
+      <a href="../../terms.html" onclick="handleSidebarLinkClick(event, 'terms.html')">Termeni și Condiții</a>
+      <a href="../employer/dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/employer/dashboard.html')">Zona Angajatori</a>
+      <a href="../../login.html" onclick="handleSidebarLinkClick(event, 'login.html')">Logout</a>
+    </div>
+
+    <script src="../../assets/js/sidebar.js"></script>
+
+  <section class="tot">
+
+    <section id="show-product">
+      <div class="container-1">
+        <div class="content"></div>
+      </div>
+    </section>
+
+    
+
+    <h1 id="similare">Produse similare</h1>
+    <section id="shower-parent">
+      <button class="next"><</button>
+      <div class="shower"></div>
+      <button class="prev">></button>
+
+    <script src="../../assets/js/job-detail.js"></script>
+    </section>
+
+  </section>
+
+      <footer class="footer">
+        <div class="f-item">
+          <h2>SnapJobs</h2>
+          <a href="profile.html">Profilul meu</a>
+          <a href="dashboard.html">Găsește Joburi</a>
+        </div>
+        <div class="f-item">
+          <h2>Informații</h2>
+          <a href="../../how-it-works.html">Cum funcționează SnapJobs</a>
+          <a href="../../faq.html">FAQ</a>
+          <a href="../../privacy.html">Confidențialitate</a>
+          <a href="../../terms.html">Termeni și condiții</a>
+        </div>
+        <div class="f-item">
+          <h2>Contact</h2>
+          <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+          <p>Luni - Vineri: 09:00 - 18:00</p>
+          <p>București, România</p>
+        </div>
+      </footer>  </body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapJobs - Profilul Meu</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/header-styles.css">
+    <style>
+        /* Stiluri specifice pentru Modala de Editare (inline pentru simplitate, sau mutate in CSS) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1620;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #29b6f6;
+            width: 90%;
+            max-width: 500px;
+            color: white;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+
+      <div class="logo">
+        <a href="../../index.html"><img src="../../assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo"></a>
+      </div>
+
+      <div class="header-actions">
+        <div class="auth-buttons">
+            <a href="../../login.html" class="auth-btn btn-login">Logare</a>
+            <a href="../../register.html" class="auth-btn btn-signup">Înregistrare</a>
+        </div>
+        <div class="icon-applications">
+            <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span id="applicationCount" class="job-bubble">0</span>
+            </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="../../index.html" onclick="handleSidebarLinkClick(event, 'index.html')">Acasă</a>
+      <a href="dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/student/dashboard.html')">Găsește Joburi</a>
+      <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">Aplicațiile mele</a>
+      <a href="profile.html" onclick="handleSidebarLinkClick(event, 'pages/student/profile.html')" style="color: #29b6f6;">Profilul meu</a>
+      <a href="../../faq.html" onclick="handleSidebarLinkClick(event, 'faq.html')">FAQ</a>
+      <a href="../../terms.html" onclick="handleSidebarLinkClick(event, 'terms.html')">Termeni și Condiții</a>
+      <a href="../employer/dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/employer/dashboard.html')">Zona Angajatori</a>
+      <a href="../../login.html" onclick="handleSidebarLinkClick(event, 'login.html')">Logout</a>
+    </div>
+
+    <!-- CONTENT PROFIL -->
+    <div class="profile-container">
+        <!-- Stânga: Info Scurt -->
+        <div class="profile-sidebar-card">
+            <div class="profile-avatar">
+                <img id="p-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar">
+            </div>
+            <h2 id="p-name">Nume Student</h2>
+            <p id="p-role" style="color: #29b6f6;">Student</p>
+            <button class="edit-btn" onclick="openEditModal()">Editează Profil</button>
+        </div>
+
+        <!-- Dreapta: Detalii -->
+        <div class="profile-details-card">
+            <h3 class="section-title">Despre Mine</h3>
+            <p id="p-bio" class="bio-text">Adaugă o scurtă descriere despre tine...</p>
+
+            <h3 class="section-title">Informații Contact</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Email:</span>
+                    <span id="p-email" class="value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Telefon:</span>
+                    <span id="p-phone" class="value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Oraș:</span>
+                    <span id="p-location" class="value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Universitate:</span>
+                    <span id="p-university" class="value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALA EDITARE -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <h2 style="margin-top:0; color: #29b6f6;">Editează Profil</h2>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Nume Complet</label>
+                    <input type="text" id="in-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Titlu (ex: Student @ ASE)</label>
+                    <input type="text" id="in-role">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="in-email">
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="tel" id="in-phone">
+                </div>
+                <div class="form-group">
+                    <label>Oraș</label>
+                    <input type="text" id="in-location">
+                </div>
+                <div class="form-group">
+                    <label>Universitate</label>
+                    <input type="text" id="in-university">
+                </div>
+                <div class="form-group">
+                    <label>Despre Mine</label>
+                    <textarea id="in-bio" rows="4"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="edit-btn" style="flex: 1;">Salvează</button>
+                    <button type="button" class="edit-btn" style="flex: 1; background: #333; border-color: #555;" onclick="closeEditModal()">Anulează</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>SnapJobs</h2>
+        <a href="profile.html">Profilul meu</a>
+        <a href="dashboard.html">Găsește Joburi</a>
+      </div>
+      <div class="f-item">
+        <h2>Informații</h2>
+        <a href="../../how-it-works.html">Cum funcționează SnapJobs</a>
+        <a href="../../faq.html">FAQ</a>
+        <a href="../../privacy.html">Confidențialitate</a>
+        <a href="../../terms.html">Termeni și condiții</a>
+      </div>
+      <div class="f-item">
+        <h2>Contact</h2>
+        <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+        <p>Luni - Vineri: 09:00 - 18:00</p>
+        <p>București, România</p>
+      </div>
+    </footer>
+
+    <script src="../../assets/js/sidebar.js"></script>
+    <script src="../../assets/js/student-profile.js"></script>
+</body>
+</html>

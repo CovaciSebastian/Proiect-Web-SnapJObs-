@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapJobs - Aplicările Mele</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/header-styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .applications-container {
+            max-width: 800px;
+            margin: 40px auto; /* Readuc la centrat */
+            padding: 20px;
+            flex: 1; /* Ocupă tot spațiul liber */
+            width: 100%;
+        }
+
+        .app-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-status {
+            background: rgba(41, 182, 246, 0.2); /* Light blue with opacity */
+            color: #29b6f6;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid #29b6f6;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <header class="header-1">
+      <button class="colaps" onclick="showModala()">
+        <div class="icon-cart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-align-justify">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </div>
+      </button>
+
+      <div class="logo">
+        <a href="../../index.html"><img src="../../assets/img/SnapJobs_logo_mare-removebg-preview.png" alt="SnapJobs Logo"></a>
+      </div>
+
+      <div class="header-actions">
+        <div class="auth-buttons">
+            <a href="../../login.html" class="auth-btn btn-login">Logare</a>
+            <a href="../../register.html" class="auth-btn btn-signup">Înregistrare</a>
+        </div>
+        <div class="icon-applications">
+            <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span id="applicationCount" class="job-bubble">0</span>
+            </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- MENIU LATERAL STUDENT -->
+    <div class="side-nav">
+      <a href="../../index.html" onclick="handleSidebarLinkClick(event, 'index.html')">Acasă</a>
+      <a href="dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/student/dashboard.html')">Găsește Joburi</a>
+
+      <a href="applications.html" onclick="handleSidebarLinkClick(event, 'pages/student/applications.html')">Aplicațiile mele</a>
+      <a href="profile.html" onclick="handleSidebarLinkClick(event, 'pages/student/profile.html')">Profilul meu</a>
+      <a href="../../faq.html" onclick="handleSidebarLinkClick(event, 'faq.html')">FAQ</a>
+      <a href="../../terms.html" onclick="handleSidebarLinkClick(event, 'terms.html')">Termeni și Condiții</a>
+      <a href="../employer/dashboard.html" onclick="handleSidebarLinkClick(event, 'pages/employer/dashboard.html')">Zona Angajatori</a>
+      <a href="../../login.html" onclick="handleSidebarLinkClick(event, 'login.html')">Logout</a>
+    </div>
+
+
+
+    <div class="applications-container">
+        <h1 class="page-title">Istoric Aplicări</h1>
+        <div id="applicationsList">
+            <!-- Filled by JS -->
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="f-item">
+        <h2>SnapJobs</h2>
+        <a href="profile.html">Profilul meu</a>
+        <a href="dashboard.html">Găsește Joburi</a>
+      </div>
+      <div class="f-item">
+        <h2>Informații</h2>
+        <a href="../../how-it-works.html">Cum funcționează SnapJobs</a>
+        <a href="../../faq.html">FAQ</a>
+        <a href="../../privacy.html">Confidențialitate</a>
+        <a href="../../terms.html">Termeni și condiții</a>
+      </div>
+      <div class="f-item">
+        <h2>Contact</h2>
+        <a href="mailto:contact@snapjobs.ro">contact@snapjobs.ro</a>
+        <p>Luni - Vineri: 09:00 - 18:00</p>
+        <p>București, România</p>
+      </div>
+    </footer>
+
+    <script>
+        // Funcția principală pentru randarea și gestionarea aplicațiilor
+        async function renderApplications() {
+            const list = document.getElementById('applicationsList');
+            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+
+            list.innerHTML = ''; // Golește lista înainte de re-randare
+
+            if (appliedIds.length === 0) {
+                list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
+                // Asigură-te că și contorul din header este 0
+                if (window.updateHeaderButtons) {
+                    window.updateHeaderButtons();
+                }
+                return;
+            }
+
+            // Fetch all jobs
+            let allJobs = [];
+            try {
+                const res = await fetch('../../data/jobs.json');
+                const staticJobs = await res.json();
+                const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
+                allJobs = [...staticJobs, ...newJobs];
+            } catch (e) {
+                console.error("Err loading jobs", e);
+            }
+
+            // Filter applied jobs
+            const appliedJobs = allJobs.filter(job => appliedIds.includes(job.id));
+
+            appliedJobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.innerHTML = `
+                    <div>
+                        <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
+                        <p style="color: #aaa;">${job.company}</p>
+                        <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
+                    </div>
+                    <div style="text-align: right; display: flex; flex-direction: column; gap: 10px;">
+                        <div class="app-status">Aplicat</div>
+                        <div style="color: #fff; font-weight: bold;">${job.salary}</div>
+                        <button class="remove-app-btn" onclick="removeApplication(${job.id})">Anulează Aplicarea</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            // Actualizează contorul din header după randare
+            if (window.updateHeaderButtons) { // Presupune că updateHeaderButtons este globală
+                window.updateHeaderButtons();
+            }
+        }
+
+        // Funcția de ștergere a unei aplicații
+        function removeApplication(jobIdToRemove) {
+            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+            
+            const initialLength = appliedIds.length;
+            appliedIds = appliedIds.filter(id => id !== jobIdToRemove); // Păstrează doar ID-urile care NU se potrivesc
+            
+            if (appliedIds.length < initialLength) { // Dacă s-a eliminat ceva
+                localStorage.setItem('myApplications', JSON.stringify(appliedIds));
+                alert('Aplicația a fost anulată.');
+                renderApplications(); // Re-randare lista după eliminare
+            } else {
+                alert('Aplicația nu a putut fi găsită.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApplications(); // Apelez funcția la încărcarea paginii
+        });
+    </script>
+    <script src="../../assets/js/sidebar.js"></script>
+</body>
+</html>
