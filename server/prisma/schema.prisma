@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password_hash String
+  name          String
+  phone         String?
+  city          String?
+  university    String?
+  about         String?
+  title         String?
+  role          String   @default("student") // 'student', 'employer'
+  created_at    DateTime @default(now())
+
+  jobs         Job[]
+  applications Application[]
+
+  @@map("users")
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  employer_id Int
+  employer    User     @relation(fields: [employer_id], references: [id])
+  title       String
+  company     String
+  type        String   // 'eveniment', 'online', 'fizic'
+  salary      String
+  location    String
+  lat         Float?
+  lng         Float?
+  date        String?  // Added to support existing frontend date filter
+  description String
+  image_url   String?
+  created_at  DateTime @default(now())
+
+  applications Application[]
+
+  @@map("jobs")
+}
+
+model Application {
+  id         Int      @id @default(autoincrement())
+  job_id     Int
+  job        Job      @relation(fields: [job_id], references: [id])
+  student_id Int
+  student    User     @relation(fields: [student_id], references: [id])
+  applied_at DateTime @default(now())
+
+  @@unique([job_id, student_id])
+  @@map("applications")
+}

@@ -11,64 +11,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function handleRegister(e) {
+async function handleRegister(e) {
     e.preventDefault();
     
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    // Get existing users
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
 
-    // Check if user exists
-    const userExists = users.find(u => u.email === email);
-    if (userExists) {
-        alert('Acest email este deja folosit!');
-        return;
+        if (data.success) {
+            alert('Cont creat cu succes! Te rugăm să te loghezi.');
+            window.location.href = 'login.html';
+        } else {
+            alert(data.message || 'Eroare la înregistrare');
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Eroare de server');
     }
-
-    // Add new user
-    const newUser = { name, email, password };
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-
-    // Simulate auto-login or redirect
-    alert('Cont creat cu succes! Te rugăm să te loghezi.');
-    window.location.href = 'login.html';
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const errorMsg = document.getElementById('loginError');
 
-    // Get users
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
 
-    // Find user
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        // Login Success
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('currentUser', JSON.stringify(user)); // Save current user data
-        
-        // Optional: Update profile data if needed based on login
-        // const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
-        // profile.name = user.name;
-        // profile.email = user.email;
-        // localStorage.setItem('userProfile', JSON.stringify(profile));
-
-        window.location.href = 'student-dashboard.html';
-    } else {
-        // Login Failed
-        if (errorMsg) {
-            errorMsg.style.display = 'block';
+        if (data.success) {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('token', data.token); // Store JWT
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            
+            if (data.user.role === 'employer') {
+                window.location.href = 'pages/employer/dashboard.html';
+            } else {
+                window.location.href = 'student-jobs.html';
+            }
         } else {
-            alert('Email sau parolă incorectă.');
+            if (errorMsg) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = data.message;
+            } else {
+                alert(data.message || 'Login failed');
+            }
         }
+    } catch (error) {
+        console.error(error);
+        alert('Server error');
     }
 }

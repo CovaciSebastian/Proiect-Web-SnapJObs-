@@ -1,5 +1,12 @@
-document.getElementById("jobForm").addEventListener("submit", function(e) {
+document.getElementById("jobForm").addEventListener("submit", async function(e) {
     e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert("Trebuie să fii logat ca angajator.");
+        window.location.href = "../../login.html";
+        return;
+    }
 
     // Colectare date
     const title = document.getElementById("title").value;
@@ -21,25 +28,38 @@ document.getElementById("jobForm").addEventListener("submit", function(e) {
     }
 
     // Creare obiect job
-    const newJob = {
-        id: Date.now(), 
-        title: title,
-        company: company,
-        type: type,
-        salary: salary,
-        location: location,
-        description: description,
-        date: date,
-        lat: lat,
-        lng: lng,
-        image: `img/job-${type}.png`
+    const jobData = {
+        title,
+        company,
+        type,
+        salary,
+        location,
+        description,
+        date,
+        lat,
+        lng,
+        image_url: `img/job-${type}.png`
     };
 
-    // Salvare în LocalStorage
-    let storedJobs = JSON.parse(localStorage.getItem("newJobs")) || [];
-    storedJobs.push(newJob);
-    localStorage.setItem("newJobs", JSON.stringify(storedJobs));
+    try {
+        const res = await fetch('http://localhost:3000/api/jobs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(jobData)
+        });
+        const data = await res.json();
 
-    alert("Jobul a fost publicat cu succes!");
-    window.location.href = "employer-dashboard.html";
+        if (data.success) {
+            alert("Jobul a fost publicat cu succes!");
+            window.location.href = "dashboard.html";
+        } else {
+            alert(data.message || "Eroare la postare");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Eroare server");
+    }
 });
