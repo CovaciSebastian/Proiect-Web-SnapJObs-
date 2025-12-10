@@ -20,11 +20,57 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         saveProfile();
     });
+
+    // Close modal when clicking outside
+    const modalOverlay = document.getElementById('editModal');
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeEditModal();
+        }
+    });
 });
 
 function loadProfile() {
-    const storedProfile = JSON.parse(localStorage.getItem('userProfile'));
-    const profile = storedProfile || defaultProfile;
+    let profile = JSON.parse(localStorage.getItem('userProfile'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // Initialize or Update Profile Logic
+    if (currentUser) {
+        let shouldSave = false;
+
+        // If no profile exists, create one based on currentUser
+        if (!profile) {
+            profile = {
+                name: currentUser.name || defaultProfile.name,
+                role: defaultProfile.role,
+                email: currentUser.email || defaultProfile.email,
+                phone: defaultProfile.phone,
+                location: defaultProfile.location,
+                university: defaultProfile.university,
+                bio: defaultProfile.bio,
+                avatar: defaultProfile.avatar
+            };
+            shouldSave = true;
+        } 
+        // If profile exists but still has default "dummy" data, overwrite with currentUser data
+        else {
+            if (profile.name === defaultProfile.name && currentUser.name) {
+                profile.name = currentUser.name;
+                shouldSave = true;
+            }
+            if (profile.email === defaultProfile.email && currentUser.email) {
+                profile.email = currentUser.email;
+                shouldSave = true;
+            }
+        }
+
+        if (shouldSave) {
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+        }
+    } else if (!profile) {
+        // Fallback if no user is logged in and no profile exists
+        profile = defaultProfile;
+    }
 
     // Populate UI
     document.getElementById('p-name').textContent = profile.name;

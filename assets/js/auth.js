@@ -14,15 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleRegister(e) {
     e.preventDefault();
     
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
 
     // Get existing users
     const users = JSON.parse(localStorage.getItem('users')) || [];
 
     // Check if user exists
-    const userExists = users.find(u => u.email === email);
+    const userExists = users.find(u => u.email.toLowerCase() === email);
     if (userExists) {
         alert('Acest email este deja folosit!');
         return;
@@ -41,15 +41,15 @@ function handleRegister(e) {
 function handleLogin(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('loginError');
 
     // Get users
     const users = JSON.parse(localStorage.getItem('users')) || [];
 
     // Find user
-    const user = users.find(u => u.email === email && u.password === password);
+    const user = users.find(u => u.email.toLowerCase() === email && u.password === password);
 
     if (user) {
         // Login Success
@@ -62,7 +62,7 @@ function handleLogin(e) {
         // profile.email = user.email;
         // localStorage.setItem('userProfile', JSON.stringify(profile));
 
-        window.location.href = 'student-dashboard.html';
+        window.location.href = 'pages/student/dashboard.html';
     } else {
         // Login Failed
         if (errorMsg) {
