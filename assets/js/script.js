@@ -7,17 +7,10 @@ let myApplications = [];
 // Inițializare Aplicație
 const initApp = () => {
     // 1. Încărcăm Joburile
-    fetch("data/jobs.json")
+    fetch("http://localhost:3000/api/jobs")
         .then((response) => response.json())
         .then((data) => {
             jobs = data;
-
-            // Încărcăm și joburile postate local (de angajatori)
-            const localJobs = JSON.parse(localStorage.getItem("newJobs")) || [];
-            if (localJobs.length > 0) {
-                jobs = [...localJobs, ...jobs]; // Le punem pe cele noi primele
-            }
-
             renderJobs(jobs);
             initSearch();
         })
@@ -57,7 +50,7 @@ function renderJobs(jobsList) {
                 <span class="job-type-badge">${job.type.toUpperCase()}</span>
             </div>
             <a href="job-detail.html?id=${job.id}">         
-                <img src="assets/${job.image}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
+                <img src="assets/${job.image_url || job.image}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
                 <h3 class="job-title">${job.title}</h3>
             </a>
             

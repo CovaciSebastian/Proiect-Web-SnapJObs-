@@ -129,75 +129,54 @@
         // Funcția principală pentru randarea și gestionarea aplicațiilor
         async function renderApplications() {
             const list = document.getElementById('applicationsList');
-            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
+            const token = localStorage.getItem('token');
 
-            list.innerHTML = ''; // Golește lista înainte de re-randare
-
-            if (appliedIds.length === 0) {
-                list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
-                // Asigură-te că și contorul din header este 0
-                if (window.updateHeaderButtons) {
-                    window.updateHeaderButtons();
-                }
+            if (!token) {
+                window.location.href = "../../login.html";
                 return;
             }
 
-            // Fetch all jobs
-            let allJobs = [];
+            list.innerHTML = ''; 
+
             try {
-                const res = await fetch('../../data/jobs.json');
-                const staticJobs = await res.json();
-                const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
-                allJobs = [...staticJobs, ...newJobs];
+                const res = await fetch('http://localhost:3000/api/applications/my-applications', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const myApps = await res.json();
+                
+                if (myApps.length === 0) {
+                    list.innerHTML = '<p style="color: #888;">Nu ai aplicat la niciun job încă.</p>';
+                    return;
+                }
+
+                myApps.forEach(app => {
+                    const job = app.job;
+                    if (!job) return; 
+
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <div>
+                            <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
+                            <p style="color: #aaa;">${job.company}</p>
+                            <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
+                        </div>
+                        <div style="text-align: right; display: flex; flex-direction: column; gap: 10px;">
+                            <div class="app-status">Aplicat</div>
+                            <div style="color: #fff; font-weight: bold;">${job.salary}</div>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+                
             } catch (e) {
-                console.error("Err loading jobs", e);
-            }
-
-            // Filter applied jobs
-            const appliedJobs = allJobs.filter(job => appliedIds.includes(job.id));
-
-            appliedJobs.forEach(job => {
-                const card = document.createElement('div');
-                card.className = 'app-card';
-                card.innerHTML = `
-                    <div>
-                        <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
-                        <p style="color: #aaa;">${job.company}</p>
-                        <p style="color: #888; font-size: 0.9em;">📅 ${job.date || 'N/A'}</p>
-                    </div>
-                    <div style="text-align: right; display: flex; flex-direction: column; gap: 10px;">
-                        <div class="app-status">Aplicat</div>
-                        <div style="color: #fff; font-weight: bold;">${job.salary}</div>
-                        <button class="remove-app-btn" onclick="removeApplication(${job.id})">Anulează Aplicarea</button>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-
-            // Actualizează contorul din header după randare
-            if (window.updateHeaderButtons) { // Presupune că updateHeaderButtons este globală
-                window.updateHeaderButtons();
-            }
-        }
-
-        // Funcția de ștergere a unei aplicații
-        function removeApplication(jobIdToRemove) {
-            let appliedIds = JSON.parse(localStorage.getItem('myApplications')) || [];
-            
-            const initialLength = appliedIds.length;
-            appliedIds = appliedIds.filter(id => id !== jobIdToRemove); // Păstrează doar ID-urile care NU se potrivesc
-            
-            if (appliedIds.length < initialLength) { // Dacă s-a eliminat ceva
-                localStorage.setItem('myApplications', JSON.stringify(appliedIds));
-                alert('Aplicația a fost anulată.');
-                renderApplications(); // Re-randare lista după eliminare
-            } else {
-                alert('Aplicația nu a putut fi găsită.');
+                console.error("Err loading apps", e);
+                list.innerHTML = '<p style="color: red;">Eroare server.</p>';
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderApplications(); // Apelez funcția la încărcarea paginii
+            renderApplications(); 
         });
     </script>
     <script src="../../assets/js/sidebar.js"></script>
