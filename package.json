@@ -1,0 +1,27 @@
+{
+  "name": "proiect-web-snapjobs-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npm run dev --prefix server",
+    "client": "py -m http.server 8000",
+    "start": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CovaciSebastian/Proiect-Web-SnapJObs-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CovaciSebastian/Proiect-Web-SnapJObs-/issues"
+  },
+  "homepage": "https://github.com/CovaciSebastian/Proiect-Web-SnapJObs-#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
