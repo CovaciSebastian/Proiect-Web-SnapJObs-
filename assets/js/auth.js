@@ -61,7 +61,7 @@ async function handleLogin(e) {
             if (data.user.role === 'employer') {
                 window.location.href = 'pages/employer/dashboard.html';
             } else {
-                window.location.href = 'student-jobs.html';
+                window.location.href = 'index.html';
             }
         } else {
             if (errorMsg) {

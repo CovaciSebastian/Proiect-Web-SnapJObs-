@@ -20,7 +20,7 @@ function updateHeaderButtons() {
                 profileHref = '../student/profile.html'; // Adjust for subfolders
             }
             profileLink.innerHTML = `
-                <a href="${profileHref}" class="auth-btn btn-profile">Profilul meu</a>
+                <a href="${profileHref}" class="auth-btn btn-profile" style="background-color: #29b6f6 !important; color: #000 !important;">Profilul meu</a>
             `;
             // Insert before applications icon or at the end if applicationsIcon is null
             if (applicationsIcon) {
