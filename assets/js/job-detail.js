@@ -9,19 +9,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // 1. Fetch all jobs
-        const res = await fetch('../../data/jobs.json'); // Adjusted path
-        const staticJobs = await res.json();
-        const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
-        const allJobs = [...staticJobs, ...newJobs];
-
-        // 2. Find job
-        const job = allJobs.find(j => j.id == jobId);
-
-        if (!job) {
+        // 1. Fetch job directly from API
+        const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`);
+        
+        if (!res.ok) {
             container.innerHTML = '<p style="color: red;">Jobul nu a fost găsit.</p>';
             return;
         }
+
+        const job = await res.json();
 
         // 3. Check application status & User Role
         const myApps = JSON.parse(localStorage.getItem('myApplications')) || [];
