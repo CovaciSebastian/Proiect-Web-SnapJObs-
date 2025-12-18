@@ -2,6 +2,11 @@ const prisma = require('../prismaClient');
 
 const applyToJob = async (req, res) => {
     try {
+        // Restriction: Employers cannot apply
+        if (req.user.role === 'employer') {
+            return res.status(403).json({ success: false, message: 'Angajatorii nu pot aplica la joburi.' });
+        }
+
         const { jobId } = req.body;
         const studentId = req.user.id; // from authMiddleware
 

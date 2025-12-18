@@ -87,12 +87,23 @@ function renderJobs(jobsToRender) {
         shadowSize: [41, 41]
     });
 
+    // Get current user to check role
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isEmployer = currentUser && currentUser.role === 'employer';
+
     jobsToRender.forEach(job => {
         // 1. Render in List
         const hasApplied = appliedJobs.includes(job.id) || appliedJobs.includes(String(job.id));
-        const btnText = hasApplied ? "Ai aplicat" : "Aplică";
-        const btnClass = hasApplied ? "applied" : "";
-        const btnDisabled = hasApplied ? "disabled" : "";
+        
+        let btnText = hasApplied ? "Ai aplicat" : "Aplică";
+        let btnClass = hasApplied ? "applied" : "";
+        let btnDisabled = hasApplied ? "disabled" : "";
+
+        if (isEmployer) {
+            btnText = "Nu poți aplica";
+            btnClass = "disabled"; // Reuse disabled style or add specific one
+            btnDisabled = "disabled"; 
+        }
 
         const card = document.createElement('div');
         card.className = 'job-card-list';
@@ -122,10 +133,9 @@ function renderJobs(jobsToRender) {
         listContainer.appendChild(card);
 
         // 2. Render on Map (if coordinates exist)
-        // Simulated coordinates for demo if not in DB (random offset from center)
-        // In a real app, job.lat and job.lng should come from DB
-        let jLat = job.lat;
-        let jLng = job.lng;
+        // Use real coords if available, otherwise randomize
+        let jLat = job.lat ? parseFloat(job.lat) : null;
+        let jLng = job.lng ? parseFloat(job.lng) : null;
 
         // Fallback if no coords (simulate random spread for demo)
         if (!jLat || !jLng) {

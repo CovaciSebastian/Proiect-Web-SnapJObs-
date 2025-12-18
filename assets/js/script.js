@@ -32,6 +32,10 @@ function renderJobs(jobsList) {
         return;
     }
 
+    // Check user role
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isEmployer = currentUser && currentUser.role === 'employer';
+
     jobsList.forEach((job) => {
         let newJob = document.createElement("div");
         newJob.dataset.id = job.id;
@@ -41,9 +45,16 @@ function renderJobs(jobsList) {
 
         // Verificăm dacă utilizatorul a aplicat deja
         const hasApplied = myApplications.includes(job.id.toString()) || myApplications.includes(job.id);
-        const btnText = hasApplied ? "Ai aplicat" : "Aplică acum";
-        const btnClass = hasApplied ? "addCart applied" : "addCart";
-        const btnDisabled = hasApplied ? "disabled" : "";
+        
+        let btnText = hasApplied ? "Ai aplicat" : "Aplică acum";
+        let btnClass = hasApplied ? "addCart applied" : "addCart";
+        let btnDisabled = hasApplied ? "disabled" : "";
+
+        if (isEmployer) {
+            btnText = "Nu poți aplica";
+            btnClass = "addCart disabled"; // Reuse existing style but disable
+            btnDisabled = "disabled";
+        }
 
         newJob.innerHTML = `
             <div class="job-card-header">
