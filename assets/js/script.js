@@ -49,7 +49,7 @@ function renderJobs(jobsList) {
             <div class="job-card-header">
                 <span class="job-type-badge">${job.type.toUpperCase()}</span>
             </div>
-            <a href="job-detail.html?id=${job.id}">         
+            <a href="pages/student/dashboard.html?id=${job.id}">         
                 <img src="assets/${job.image_url || job.image}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
                 <h3 class="job-title">${job.title}</h3>
             </a>
