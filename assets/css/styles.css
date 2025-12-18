@@ -11,7 +11,7 @@ html {
 
   .why-us {
     width: 20%;
-   
+
     padding: 2vh;
     border-radius: 1vh;
     box-shadow: #eeeeee30 0px 7px 29px 0px;
@@ -70,7 +70,7 @@ html {
 
 .tot {
   position: relative;
-  
+
 }
 .side-nav {
   height: 90vh;
@@ -306,13 +306,20 @@ svg {
   align-items: center;
   justify-content: space-between;
   width: 16vw;
-  box-shadow: #eeeeee30 0px 7px 29px 0px;
+  background-color: #1a1620; /* Lighter dark background for card effect */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   border-radius: 1vh;
   justify-self: center;
- 
   color: #fff;
-  border: 0.3vh solid #110e15;
- 
+  border: 1px solid #333; /* Subtle visible grey border */
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center; /* Center all text inside the item */
+}
+
+.listProduct .item:hover {
+  transform: translateY(-5px); /* Lift effect */
+  border-color: #29b6f6; /* Blue border on hover */
+  box-shadow: 0 10px 25px rgba(41, 182, 246, 0.15); /* Blue glow */
 }
 .listProduct a {
   display: flex;
@@ -321,7 +328,7 @@ svg {
   color: #fff;
   text-decoration: none;
   background-color: transparent;
-  
+
 
 }
 
@@ -347,7 +354,7 @@ svg {
 .listProduct .item .price {
   word-spacing: 3px;
   font-weight: 500;
-  
+
 }
 .preturi{
   margin: 1vh 0;
@@ -382,7 +389,7 @@ svg {
   }
 }
 .itemCart {
-  color: 	#fff;
+  color:        #fff;
   padding: 0 2vh;
   direction: ltr;
 }
@@ -398,7 +405,7 @@ svg {
   position: relative;
 }
 .total-box {
-  
+
   padding: 2vh;
   border-radius: 0 0 1vh 1vh;
   border-top: 0.2vh #fff solid;
@@ -411,7 +418,7 @@ svg {
 .subtotal{
   float: right;
   width: 45%;
-  
+
 }
 
 .tabelTotal{
@@ -419,7 +426,7 @@ svg {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  
+
 }
 .inforr {
   width: 35vw;
@@ -446,7 +453,7 @@ svg {
 }
 
 .name{
-  
+
   a{
     padding: 0 1vw;
     overflow: hidden;
@@ -463,7 +470,7 @@ svg {
   outline: none;
   border-radius: 50%;
   border: 0.3vh solid #110e15;
-  
+
 }
 
 .itemCart div {
@@ -480,7 +487,7 @@ svg {
   gap: 2vh;
   display: flex;
   flex-direction: column;
- 
+
 }
 .headerCart{
   display: flex;
@@ -499,7 +506,7 @@ svg {
   justify-content: start;
   align-items: center;
   gap: 2vh;
-  
+
 }
 .config{
   width: 40%;
@@ -564,7 +571,7 @@ svg {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  
+
 }
 
 #img-show {
@@ -629,8 +636,8 @@ svg {
   flex-direction: column;
   align-items: first baseline;
   justify-content: space-evenly;
- 
-  
+
+
 }
 
 .note{
@@ -640,7 +647,7 @@ svg {
 
 .top-info > button:hover, .addCart:hover{
   cursor: pointer;
-  
+
 }
 
 .contentS {
@@ -657,7 +664,7 @@ svg {
   justify-content: space-evenly;
   width: 100%;
   gap: 4%;
-  img {
+  img{
     width: 20%;
   }
 }
@@ -707,8 +714,8 @@ svg {
   scroll-behavior: smooth;
   scroll-snap-type: both;
   width: 75vw;
-  
-  
+
+
 }
 
 .shower::-webkit-scrollbar{
@@ -727,7 +734,7 @@ svg {
   box-shadow: #eeeeee30 0px 7px 29px 0px;
   border-radius: 0 0 1vh 1vh;
   z-index: 3;
-  img {
+  img{
     width: 15vw;
     aspect-ratio: 1/1;
     border-radius: 1vh 1vh 0 0 ;
@@ -735,7 +742,7 @@ svg {
   a {
     text-decoration: none;
     color: #adadad;
-    
+
   h2{
       font-weight: 300;
       font-size:medium;
@@ -755,9 +762,9 @@ svg {
     background-color: #110e15;
     padding: 1vh 0;
     border-radius: 0 0 1vh 1vh;
-  
+
   }
- 
+
 
 }
 
@@ -768,7 +775,7 @@ svg {
 .selectt{
   width: 80%;
   margin-left: 10%;
- 
+
 }
 
 .xProduse{
@@ -789,7 +796,7 @@ svg {
 .selectTor {
   display: flex;
   flex-direction: column;
- 
+
   gap: 5vh;
   float: right;
   position: relative;
@@ -896,8 +903,8 @@ svg {
   border-radius: 1vh;
   gap: 2vh;
   box-shadow: #eeeeee30 0px 7px 29px 0px;
-  
- 
+
+
   /*box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
@@ -909,12 +916,12 @@ svg {
     border: 0.2vh solid #110e15;
     border-radius: 0.5vh;
     padding: 0.5vh;
-    
+
   }
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     margin: 1vh 0 !important;
@@ -927,7 +934,7 @@ input:-webkit-autofill:active {
 
 
 .checkOutt{
-  color:	#fff;
+  color:        #fff;
   background-color: #110e15;
   border: 0.5vh solid #110e15;
   border-radius: 1vh;
@@ -958,21 +965,19 @@ input:-webkit-autofill:active {
   }
 }
 
-.user-box:focus-within,
-.user-box input:valid {
-  label {
+.user-box:focus-within label,
+.user-box input:valid label {
     color: #110e15;
     transition: 0.4s ease-in-out;
-  }
+}
 
-  input {
+.user-box:focus-within input,
+.user-box input:valid input {
     outline: none;
     margin-bottom: 1vh;
-    border-bottom: 0.2vh solid #110e15;
-
+    border-bottom: 0.2vh solid #110e15; /* Corrected color */
     box-shadow: #eeeeee30 0px 7px 29px 0px;
     transition: 0.4s ease-in-out;
-  }
 }
 
 .hide-bubble {
@@ -989,7 +994,7 @@ input:-webkit-autofill:active {
   .search-bar {
     width: 80%;
     margin-left: 10%;
-  
+
   }
   .contentSwiper{
     flex-direction: column-reverse;
@@ -1021,7 +1026,7 @@ input:-webkit-autofill:active {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
-   
+
     /*filter: drop-shadow(0 50px 20px #0009);*/
   }
   .listProduct .item{
@@ -1047,13 +1052,13 @@ input:-webkit-autofill:active {
     width: 95%;
     height: auto;
     /*height: 70vh;*/
-    
+
   }
   .subtotal{
     width: auto;
   }
-  
- 
+
+
   .itemCart{
     width: auto;
     justify-content: space-between;
@@ -1086,7 +1091,7 @@ input:-webkit-autofill:active {
     padding: 2vh;
     height: auto;
   }
- 
+
   .swiper {
     width: 100%;
     margin: 5vh 0 10vh 0;
@@ -1097,8 +1102,8 @@ input:-webkit-autofill:active {
     }
   }
 
- 
-  
+
+
   #why {
     display: flex;
     flex-direction: column;
@@ -1167,7 +1172,7 @@ input:-webkit-autofill:active {
     border-radius: 0 0 1vh 1vh;
     z-index: 3;
   }
-  .item-crsl img {
+  .item-crsl img{
     width: 15vw;
     aspect-ratio: 1/1;
     border-radius: 1vh 1vh 0 0 ;
@@ -1175,7 +1180,7 @@ input:-webkit-autofill:active {
   .item-crsl a {
     text-decoration: none;
     color: #adadad;
-    
+
   }
   .item-crsl h2{
       font-weight: 300;
@@ -1187,7 +1192,7 @@ input:-webkit-autofill:active {
       display: -webkit-box;
       -webkit-box-orient: vertical;
     }
-  
+
   .item-crsl button {
     width: 100%;
     color:#fff;
@@ -1196,9 +1201,9 @@ input:-webkit-autofill:active {
     background-color: #110e15;
     padding: 1vh 0;
     border-radius: 0 0 1vh 1vh;
-  
+
   }
- 
+
 
 }
 
