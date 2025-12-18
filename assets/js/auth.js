@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const isEmployerCheckbox = document.getElementById('isEmployer');
+    const codeContainer = document.getElementById('codeContainer');
 
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
@@ -8,6 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
+    }
+
+    // Toggle Employer Code Input
+    if (isEmployerCheckbox && codeContainer) {
+        isEmployerCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                codeContainer.style.display = 'block';
+            } else {
+                codeContainer.style.display = 'none';
+                document.getElementById('accessCode').value = ''; // Clear code if unchecked
+            }
+        });
     }
 });
 
@@ -17,12 +31,19 @@ async function handleRegister(e) {
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim().toLowerCase();
     const password = document.getElementById('password').value.trim();
+    
+    // Get Access Code if provided
+    let accessCode = null;
+    const accessCodeInput = document.getElementById('accessCode');
+    if (accessCodeInput && accessCodeInput.value.trim() !== "") {
+        accessCode = accessCodeInput.value.trim();
+    }
 
     try {
         const res = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, accessCode })
         });
         const data = await res.json();
 
