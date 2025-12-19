@@ -37,12 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // 4. Render
-        // Handle image path: if it starts with 'assets', prepend '../'
-        let imgPath = job.image;
+        // Handle image path
+        let imgPath = job.image_url;
         if (imgPath && !imgPath.startsWith('assets/') && !imgPath.startsWith('http')) {
-             // If it's a relative path from root, it should already be correct for root assets/img
-             // But if `job.image` is still `img/job-type.png`, we need to change it to `assets/img/job-type.png`
-             imgPath = '../../assets/' + imgPath; // Assuming job.image is "img/..."
+             imgPath = '../../assets/' + imgPath;
         }
 
 
