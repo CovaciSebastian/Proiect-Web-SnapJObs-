@@ -56,9 +56,95 @@
             font-size: 0.8em;
             border: 1px solid #29b6f6;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #29b6f6;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+
+        .applicant-list {
+            margin-top: 20px;
+        }
+
+        .applicant-item {
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-accept {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-reject {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .status-badge {
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .status-pending { background: #333; color: #fff; }
+        .status-accepted { background: #4caf50; color: #fff; }
+        .status-rejected { background: #f44336; color: #fff; }
     </style>
 </head>
 <body class="dark-theme">
+    <!-- Applicants Modal -->
+    <div id="applicantsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalJobTitle">Aplicanți</h2>
+            <div id="applicantsList" class="applicant-list">
+                <!-- Applicants will be loaded here -->
+            </div>
+        </div>
+    </div>
     <header class="header-1">
       <button class="colaps" onclick="showModala()">
         <div class="icon-cart">
@@ -158,7 +244,7 @@
                         <p style="color: #aaa; font-size: 0.9em;">${job.location}</p>
                         <div style="margin-top: 15px;">
                             <a href="edit-job.html?id=${job.id}" style="text-decoration: none; background: transparent; border: 1px solid #555; color: #fff; padding: 5px 10px; cursor: pointer; display: inline-block;">Editează</a>
-                            <a href="#" style="text-decoration: none; background: transparent; border: 1px solid #29b6f6; color: #29b6f6; padding: 5px 10px; cursor: pointer; margin-left: 10px; display: inline-block;">Vezi Aplicanți</a>
+                            <button onclick="viewApplicants(${job.id}, '${job.title.replace(/'/g, "\\'")}')" style="text-decoration: none; background: transparent; border: 1px solid #29b6f6; color: #29b6f6; padding: 5px 10px; cursor: pointer; margin-left: 10px; display: inline-block;">Vezi Aplicanți</button>
                             <button onclick="deleteJob(${job.id})" style="background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 5px 10px; cursor: pointer; margin-left: 10px; display: inline-block;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -176,6 +262,102 @@
                 list.innerHTML = '<p style="color: red;">Eroare la încărcarea joburilor.</p>';
             }
         });
+
+        async function viewApplicants(jobId, jobTitle) {
+            const modal = document.getElementById('applicantsModal');
+            const list = document.getElementById('applicantsList');
+            const title = document.getElementById('modalJobTitle');
+            const token = localStorage.getItem('token');
+
+            title.innerText = `Aplicanți pentru: ${jobTitle}`;
+            list.innerHTML = '<p>Se încarcă...</p>';
+            modal.style.display = 'block';
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/applications/job/${jobId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    list.innerHTML = `<p style="color: red;">Eroare: ${data.message || 'Nu s-au putut încărca aplicanții.'}</p>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    list.innerHTML = '<p style="color: #888;">Nicio aplicație încă.</p>';
+                    return;
+                }
+
+                list.innerHTML = '';
+                data.forEach(app => {
+                    const item = document.createElement('div');
+                    item.className = 'applicant-item';
+                    
+                    const currentStatus = app.status || 'pending';
+                    let statusHtml = '';
+
+                    if (currentStatus === 'pending') {
+                        statusHtml = `
+                            <div>
+                                <button class="btn-accept" onclick="updateStatus(${app.id}, 'accepted', ${jobId}, '${jobTitle.replace(/'/g, "\\'")}')">Acceptă</button>
+                                <button class="btn-reject" onclick="updateStatus(${app.id}, 'rejected', ${jobId}, '${jobTitle.replace(/'/g, "\\'")}')">Refuză</button>
+                            </div>
+                        `;
+                    } else {
+                        statusHtml = `<span class="status-badge status-${currentStatus}">${currentStatus.toUpperCase()}</span>`;
+                    }
+
+                    item.innerHTML = `
+                        <div>
+                            <div style="font-weight: bold;">${app.student.name}</div>
+                            <div style="font-size: 0.8em; color: #aaa;">${app.student.email} | ${app.student.university || 'N/A'}</div>
+                        </div>
+                        ${statusHtml}
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = '<p style="color: red;">Eroare la încărcarea aplicanților.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('applicantsModal').style.display = 'none';
+        }
+
+        async function updateStatus(applicationId, status, jobId, jobTitle) {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`http://localhost:3000/api/applications/${applicationId}/status`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (res.ok) {
+                    // Refresh the applicants list
+                    viewApplicants(jobId, jobTitle);
+                } else {
+                    alert('Eroare la actualizarea statusului.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Eroare server.');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('applicantsModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
 
         async function deleteJob(jobId) {
             const confirmDelete = confirm("Ești sigur că vrei să ștergi acest job? Această acțiune este ireversibilă!");
