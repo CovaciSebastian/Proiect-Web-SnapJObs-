@@ -105,24 +105,46 @@ function initSearch() {
 }
 
 // Funcție Aplicare la Job
-function applyToJob(jobId) {
-    // Verificăm dacă e deja aplicat
-    if (myApplications.includes(jobId)) return;
+async function applyToJob(jobId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Trebuie să te loghezi pentru a aplica!');
+        window.location.href = 'login.html';
+        return;
+    }
 
-    // Adăugăm în listă
-    myApplications.push(jobId);
-    
-    // Salvăm în LocalStorage
-    localStorage.setItem("myApplications", JSON.stringify(myApplications));
+    try {
+        const res = await fetch('http://localhost:3000/api/applications', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ jobId })
+        });
+        const data = await res.json();
 
-    // Actualizăm UI
-    updateApplicationsCount();
-    
-    // Re-randăm butonul specific (sau toată lista, dar e mai eficient doar butonul)
-    // Aici, pentru simplitate, re-randăm tot pentru a actualiza starea butoanelor
-    renderJobs(jobs);
+        if (data.success) {
+            // Adăugăm în listă locală pentru UI
+            if (!myApplications.includes(jobId)) {
+                myApplications.push(jobId);
+                localStorage.setItem("myApplications", JSON.stringify(myApplications));
+            }
 
-    alert("Felicitări! Ai aplicat cu succes la acest job.");
+            // Actualizăm UI
+            updateApplicationsCount();
+            
+            // Re-randăm pentru a actualiza starea butoanelor
+            renderJobs(jobs);
+
+            alert("Felicitări! Ai aplicat cu succes la acest job.");
+        } else {
+            alert(data.message || 'Eroare la aplicare');
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Eroare de server');
+    }
 }
 
 function updateApplicationsCount() {
