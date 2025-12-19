@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm run dev --prefix server",
+    "start:frontend": "live-server --config=ls-config.js",
     "client": "py -m http.server 8000",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "start": "concurrently \"npm run server\" \"npm run start:frontend\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
   },
   "homepage": "https://github.com/CovaciSebastian/Proiect-Web-SnapJObs-#readme",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "http-proxy-middleware": "^3.0.5",
+    "live-server": "^1.2.2"
   }
 }

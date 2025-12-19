@@ -7,17 +7,24 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique
-  password_hash String
-  name          String
-  phone         String?
-  city          String?
-  university    String?
-  about         String?
-  title         String?
-  role          String   @default("student") // 'student', 'employer'
-  created_at    DateTime @default(now())
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String?
+  role      String    @default("STUDENT") // STUDENT sau EMPLOYER
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Câmpuri noi pentru OAuth
+  provider  String    @default("email") // 'email' sau 'google'
+  googleId  String?   @unique // ID-ul unic de la Google (câmpul 'sub')
+
+  // Câmpuri din modelul vechi ce pot fi utile, dar le las comentate momentan
+  // phone      String?
+  // city       String?
+  // university String?
+  // about      String?
+  // title      String?
 
   jobs         Job[]
   applications Application[]
@@ -27,7 +34,7 @@ model User {
 
 model Job {
   id          Int      @id @default(autoincrement())
-  employer_id Int
+  employer_id String
   employer    User     @relation(fields: [employer_id], references: [id])
   title       String
   company     String
@@ -36,7 +43,7 @@ model Job {
   location    String
   lat         Float?
   lng         Float?
-  date        String?  // Added to support existing frontend date filter
+  date        String?
   description String
   image_url   String?
   created_at  DateTime @default(now())
@@ -50,7 +57,7 @@ model Application {
   id         Int      @id @default(autoincrement())
   job_id     Int
   job        Job      @relation(fields: [job_id], references: [id], onDelete: Cascade)
-  student_id Int
+  student_id String
   student    User     @relation(fields: [student_id], references: [id])
   applied_at DateTime @default(now())
 

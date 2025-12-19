@@ -1,5 +1,12 @@
-const jwt = require('jsonwebtoken');
+// This middleware checks if a user is authenticated via Passport's session.
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.status(401).json({ success: false, message: 'Not authorized. Please log in.' });
+};
 
+// The old JWT-based middleware is kept for reference but can be removed.
 const protect = (req, res, next) => {
     let token;
 
@@ -17,4 +24,5 @@ const protect = (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+
+module.exports = { isAuthenticated, protect };
