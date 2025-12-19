@@ -133,29 +133,24 @@ function renderJobs(jobsToRender) {
         listContainer.appendChild(card);
 
         // 2. Render on Map (if coordinates exist)
-        // Use real coords if available, otherwise randomize
         let jLat = job.lat ? parseFloat(job.lat) : null;
         let jLng = job.lng ? parseFloat(job.lng) : null;
 
-        // Fallback if no coords (simulate random spread for demo)
-        if (!jLat || !jLng) {
-            jLat = userLat + (Math.random() - 0.5) * 0.1;
-            jLng = userLng + (Math.random() - 0.5) * 0.1;
+        if (jLat && jLng) {
+            const marker = L.marker([jLat, jLng], { icon: jobIcon })
+                .bindPopup(`
+                    <div class="map-popup-content">
+                        <h3 class="map-popup-title">${job.title}</h3>
+                        <p class="map-popup-info"><strong>${job.company}</strong></p>
+                        <p class="map-popup-info">${job.salary}</p>
+                        <a href="job-detail.html?id=${job.id}" style="color: #29b6f6; font-size: 0.9em;">Vezi detalii</a>
+                        <button class="map-apply-btn ${btnClass}" onclick="applyToJob(${job.id})" ${btnDisabled}>${btnText}</button>
+                    </div>
+                `);
+            
+            marker.addTo(map);
+            markers.push(marker);
         }
-
-        const marker = L.marker([jLat, jLng], { icon: jobIcon })
-            .bindPopup(`
-                <div class="map-popup-content">
-                    <h3 class="map-popup-title">${job.title}</h3>
-                    <p class="map-popup-info"><strong>${job.company}</strong></p>
-                    <p class="map-popup-info">${job.salary}</p>
-                    <a href="job-detail.html?id=${job.id}" style="color: #29b6f6; font-size: 0.9em;">Vezi detalii</a>
-                    <button class="map-apply-btn ${btnClass}" onclick="applyToJob(${job.id})" ${btnDisabled}>${btnText}</button>
-                </div>
-            `);
-        
-        marker.addTo(map);
-        markers.push(marker);
     });
 }
 
@@ -191,15 +186,20 @@ function filterJobs() {
         // Type Filter
         if (type !== 'all' && job.type !== type) return false;
 
-        // Date Filter (Simple string match or date object comparison needed in real app)
-        // Assuming job.date is "YYYY-MM-DD" or similar
+        // Date Filter
         if (date && job.date && !job.date.startsWith(date)) return false;
 
-        // Radius Filter (Mock coords logic)
-        // In real app use job.lat/lng
-        // For now, pass all if radius is max, or filter if we had real coords
-        // Let's rely on the mock coords assigned in renderJobs? No, filtering happens before render.
-        // We'll skip radius filter for now unless job has coords.
+        // Radius Filter
+        // If radius is 50 (max), we show all. Otherwise we filter by distance.
+        if (radius < 50) {
+            if (job.lat && job.lng) {
+                const dist = getDistance(userLat, userLng, parseFloat(job.lat), parseFloat(job.lng));
+                if (dist > radius) return false;
+            } else {
+                // If job has no coordinates, we exclude it when a specific radius is set
+                return false;
+            }
+        }
         
         return true;
     });
