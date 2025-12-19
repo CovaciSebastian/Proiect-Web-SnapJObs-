@@ -72,4 +72,70 @@ const createJob = async (req, res) => {
     }
 };
 
-module.exports = { getJobs, getJobById, createJob };
+const updateJob = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, company, type, salary, location, lat, lng, description, date } = req.body;
+
+        // 1. Check if job exists
+        const job = await prisma.job.findUnique({ where: { id: parseInt(id) } });
+        if (!job) {
+            return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+
+        // 2. Check ownership
+        if (job.employer_id !== req.user.id) {
+            return res.status(403).json({ success: false, message: 'Not authorized to edit this job' });
+        }
+
+        // 3. Update
+        const updatedJob = await prisma.job.update({
+            where: { id: parseInt(id) },
+            data: {
+                title,
+                company,
+                type,
+                salary,
+                location,
+                lat,
+                lng,
+                description,
+                date
+            }
+        });
+
+        res.json({ success: true, data: updatedJob });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const deleteJob = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Check if job exists
+        const job = await prisma.job.findUnique({ where: { id: parseInt(id) } });
+        if (!job) {
+            return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+
+        // 2. Check ownership
+        if (job.employer_id !== req.user.id) {
+            return res.status(403).json({ success: false, message: 'Not authorized to delete this job' });
+        }
+
+        // 3. Delete job (Prisma's CASCADE will delete applications)
+        await prisma.job.delete({
+            where: { id: parseInt(id) }
+        });
+
+        res.json({ success: true, message: 'Job deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+module.exports = { getJobs, getJobById, createJob, updateJob, deleteJob };

@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const isEmployerCheckbox = document.getElementById('isEmployer');
+    const codeContainer = document.getElementById('codeContainer');
 
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
@@ -9,20 +11,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
     }
+
+    // Toggle Employer Code Input
+    if (isEmployerCheckbox && codeContainer) {
+        isEmployerCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                codeContainer.style.display = 'block';
+            } else {
+                codeContainer.style.display = 'none';
+                document.getElementById('accessCode').value = ''; // Clear code if unchecked
+            }
+        });
+    }
 });
 
 async function handleRegister(e) {
     e.preventDefault();
     
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
+    
+    // Get Access Code if provided
+    let accessCode = null;
+    const accessCodeInput = document.getElementById('accessCode');
+    if (accessCodeInput && accessCodeInput.value.trim() !== "") {
+        accessCode = accessCodeInput.value.trim();
+    }
 
     try {
         const res = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, accessCode })
         });
         const data = await res.json();
 
@@ -41,8 +62,8 @@ async function handleRegister(e) {
 async function handleLogin(e) {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('loginError');
 
     try {
@@ -61,7 +82,7 @@ async function handleLogin(e) {
             if (data.user.role === 'employer') {
                 window.location.href = 'pages/employer/dashboard.html';
             } else {
-                window.location.href = 'student-jobs.html';
+                window.location.href = 'index.html';
             }
         } else {
             if (errorMsg) {

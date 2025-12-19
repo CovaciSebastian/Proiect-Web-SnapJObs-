@@ -150,6 +150,7 @@
                     
                     const card = document.createElement('div');
                     card.className = 'job-card-employer';
+                    card.id = `job-${job.id}`; // Add ID to card for easier removal
                     card.innerHTML = `
                         <div class="applicant-count">${applicants} Aplicanți</div>
                         <h3 style="color: #fff; margin-top: 0;">${job.title}</h3>
@@ -157,8 +158,16 @@
                         <p style="color: #fff; font-weight: bold; margin: 10px 0;">${job.salary}</p>
                         <p style="color: #aaa; font-size: 0.9em;">${job.location}</p>
                         <div style="margin-top: 15px;">
-                            <button style="background: transparent; border: 1px solid #555; color: #fff; padding: 5px 10px; cursor: pointer;">Editează</button>
-                            <button style="background: transparent; border: 1px solid #29b6f6; color: #29b6f6; padding: 5px 10px; cursor: pointer; margin-left: 10px;">Vezi Aplicanți</button>
+                            <a href="edit-job.html?id=${job.id}" style="text-decoration: none; background: transparent; border: 1px solid #555; color: #fff; padding: 5px 10px; cursor: pointer; display: inline-block;">Editează</a>
+                            <a href="#" style="text-decoration: none; background: transparent; border: 1px solid #29b6f6; color: #29b6f6; padding: 5px 10px; cursor: pointer; margin-left: 10px; display: inline-block;">Vezi Aplicanți</a>
+                            <button onclick="deleteJob(${job.id})" style="background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 5px 10px; cursor: pointer; margin-left: 10px; display: inline-block;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
                         </div>
                     `;
                     list.appendChild(card);
@@ -168,6 +177,30 @@
                 list.innerHTML = '<p style="color: red;">Eroare la încărcarea joburilor.</p>';
             }
         });
+
+        async function deleteJob(jobId) {
+            const confirmDelete = confirm("Ești sigur că vrei să ștergi acest job? Această acțiune este ireversibilă!");
+            if (!confirmDelete) return;
+
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    alert('Job șters cu succes!');
+                    document.getElementById(`job-${jobId}`).remove(); // Remove from DOM
+                } else {
+                    const errorData = await res.json();
+                    alert(errorData.message || 'Eroare la ștergerea jobului.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Eroare server.');
+            }
+        }
     </script>
     <script src="../../assets/js/sidebar.js"></script>
 </body>

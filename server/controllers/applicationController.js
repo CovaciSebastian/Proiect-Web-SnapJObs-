@@ -2,6 +2,11 @@ const prisma = require('../prismaClient');
 
 const applyToJob = async (req, res) => {
     try {
+        // Restriction: Employers cannot apply
+        if (req.user.role === 'employer') {
+            return res.status(403).json({ success: false, message: 'Angajatorii nu pot aplica la joburi.' });
+        }
+
         const { jobId } = req.body;
         const studentId = req.user.id; // from authMiddleware
 
@@ -54,4 +59,25 @@ const getMyApplications = async (req, res) => {
     }
 };
 
-module.exports = { applyToJob, getMyApplications };
+const withdrawApplication = async (req, res) => {
+    try {
+        const jobId = parseInt(req.params.jobId);
+        const studentId = req.user.id;
+
+        await prisma.application.delete({
+            where: {
+                job_id_student_id: {
+                    job_id: jobId,
+                    student_id: studentId
+                }
+            }
+        });
+
+        res.json({ success: true, message: 'Application withdrawn' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error or Application not found' });
+    }
+};
+
+module.exports = { applyToJob, getMyApplications, withdrawApplication };

@@ -9,23 +9,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // 1. Fetch all jobs
-        const res = await fetch('../../data/jobs.json'); // Adjusted path
-        const staticJobs = await res.json();
-        const newJobs = JSON.parse(localStorage.getItem('newJobs')) || [];
-        const allJobs = [...staticJobs, ...newJobs];
-
-        // 2. Find job
-        const job = allJobs.find(j => j.id == jobId);
-
-        if (!job) {
+        // 1. Fetch job directly from API
+        const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`);
+        
+        if (!res.ok) {
             container.innerHTML = '<p style="color: red;">Jobul nu a fost găsit.</p>';
             return;
         }
 
-        // 3. Check application status
+        const job = await res.json();
+
+        // 3. Check application status & User Role
         const myApps = JSON.parse(localStorage.getItem('myApplications')) || [];
         const hasApplied = myApps.includes(parseInt(jobId)) || myApps.includes(jobId.toString());
+        
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const isEmployer = currentUser && currentUser.role === 'employer';
+
+        let btnText = hasApplied ? 'Ai Aplicat Deja' : 'Aplică Acum';
+        let btnDisabledAttr = hasApplied ? 'disabled' : '';
+        let btnClass = 'btn-apply-detail';
+
+        if (isEmployer) {
+            btnText = 'Angajatorii nu pot aplica';
+            btnDisabledAttr = 'disabled';
+            btnClass += ' disabled'; // Add disabled styling if any
+        }
 
         // 4. Render
         // Handle image path: if it starts with 'assets', prepend '../'
@@ -55,20 +64,47 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h3 style="color: #29b6f6; margin-bottom: 10px;">Descriere</h3>
                 <p style="color: #ccc; line-height: 1.6;">${job.description}</p>
 
-                <button id="applyBtn" class="btn-apply-detail" ${hasApplied ? 'disabled' : ''}>
-                    ${hasApplied ? 'Ai Aplicat Deja' : 'Aplică Acum'}
+                <button id="applyBtn" class="${btnClass}" ${btnDisabledAttr}>
+                    ${btnText}
                 </button>
             </div>
         `;
 
         // 5. Bind Event
         const btn = document.getElementById('applyBtn');
-        if (btn && !hasApplied) {
-            btn.addEventListener('click', () => {
-                myApps.push(job.id);
-                localStorage.setItem('myApplications', JSON.stringify(myApps));
-                alert('Ai aplicat cu succes!');
-                window.location.reload();
+        if (btn && !hasApplied && !isEmployer) { // Only bind if not applied AND not employer
+            btn.addEventListener('click', async () => { // Async for API call
+                // API Call Logic (Updated to match dashboard)
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Trebuie să te loghezi!');
+                    window.location.href = '../../login.html';
+                    return;
+                }
+                
+                try {
+                    const res = await fetch('http://localhost:3000/api/applications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ jobId: parseInt(jobId) })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        myApps.push(parseInt(jobId));
+                        localStorage.setItem('myApplications', JSON.stringify(myApps));
+                        alert('Ai aplicat cu succes!');
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Eroare la aplicare');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Eroare server');
+                }
             });
         }
 

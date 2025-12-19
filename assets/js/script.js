@@ -32,6 +32,10 @@ function renderJobs(jobsList) {
         return;
     }
 
+    // Check user role
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isEmployer = currentUser && currentUser.role === 'employer';
+
     jobsList.forEach((job) => {
         let newJob = document.createElement("div");
         newJob.dataset.id = job.id;
@@ -41,16 +45,32 @@ function renderJobs(jobsList) {
 
         // Verificăm dacă utilizatorul a aplicat deja
         const hasApplied = myApplications.includes(job.id.toString()) || myApplications.includes(job.id);
-        const btnText = hasApplied ? "Ai aplicat" : "Aplică acum";
-        const btnClass = hasApplied ? "addCart applied" : "addCart";
-        const btnDisabled = hasApplied ? "disabled" : "";
+        
+        let btnText = hasApplied ? "Ai aplicat" : "Aplică acum";
+        let btnClass = hasApplied ? "addCart applied" : "addCart";
+        let btnDisabled = hasApplied ? "disabled" : "";
+
+        if (isEmployer) {
+            btnText = "Nu poți aplica";
+            btnClass = "addCart disabled"; // Reuse existing style but disable
+            btnDisabled = "disabled";
+        }
+
+        let imgPath = job.image_url || job.image;
+        
+        // Fallback if no image
+        if (!imgPath) {
+            imgPath = 'https://placehold.co/300x300?text=Job';
+        } else if (!imgPath.startsWith('http') && !imgPath.startsWith('assets/')) {
+             imgPath = 'assets/' + imgPath;
+        }
 
         newJob.innerHTML = `
             <div class="job-card-header">
                 <span class="job-type-badge">${job.type.toUpperCase()}</span>
             </div>
-            <a href="job-detail.html?id=${job.id}">         
-                <img src="assets/${job.image_url || job.image}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
+            <a href="pages/student/dashboard.html?id=${job.id}">         
+                <img src="${imgPath}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
                 <h3 class="job-title">${job.title}</h3>
             </a>
             
@@ -75,43 +95,58 @@ function renderJobs(jobsList) {
 // Funcție Căutare
 function initSearch() {
     let searchBar = document.getElementById("search");
-    let searchResults = document.querySelector(".search-results");
-    let mainContainer = document.querySelector(".tot"); // Pentru efectul de blur
 
-    searchBar.addEventListener("keyup", (e) => {
-        const term = e.target.value.toLowerCase();
-        
-        // Filtrăm joburile
-        const filteredJobs = jobs.filter(job => 
-            job.title.toLowerCase().includes(term) || 
-            job.company.toLowerCase().includes(term)
-        );
-
-        // Opțional: Afișăm rezultate în dropdown (search-results)
-        // Sau randăm direct în lista principală (mai simplu pentru utilizator)
-        renderJobs(filteredJobs);
+    searchBar.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            const term = e.target.value.trim();
+            if (term) {
+                window.location.href = `pages/student/search-results.html?q=${encodeURIComponent(term)}`;
+            }
+        }
     });
 }
 
 // Funcție Aplicare la Job
-function applyToJob(jobId) {
-    // Verificăm dacă e deja aplicat
-    if (myApplications.includes(jobId)) return;
+async function applyToJob(jobId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Trebuie să te loghezi pentru a aplica!');
+        window.location.href = 'login.html';
+        return;
+    }
 
-    // Adăugăm în listă
-    myApplications.push(jobId);
-    
-    // Salvăm în LocalStorage
-    localStorage.setItem("myApplications", JSON.stringify(myApplications));
+    try {
+        const res = await fetch('http://localhost:3000/api/applications', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ jobId })
+        });
+        const data = await res.json();
 
-    // Actualizăm UI
-    updateApplicationsCount();
-    
-    // Re-randăm butonul specific (sau toată lista, dar e mai eficient doar butonul)
-    // Aici, pentru simplitate, re-randăm tot pentru a actualiza starea butoanelor
-    renderJobs(jobs);
+        if (data.success) {
+            // Adăugăm în listă locală pentru UI
+            if (!myApplications.includes(jobId)) {
+                myApplications.push(jobId);
+                localStorage.setItem("myApplications", JSON.stringify(myApplications));
+            }
 
-    alert("Felicitări! Ai aplicat cu succes la acest job.");
+            // Actualizăm UI
+            updateApplicationsCount();
+            
+            // Re-randăm pentru a actualiza starea butoanelor
+            renderJobs(jobs);
+
+            alert("Felicitări! Ai aplicat cu succes la acest job.");
+        } else {
+            alert(data.message || 'Eroare la aplicare');
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Eroare de server');
+    }
 }
 
 function updateApplicationsCount() {

@@ -95,12 +95,12 @@
 }
 
 .btn-profile {
-    background-color: #ffd700; /* Example color for profile button */
+    background-color: #29b6f6 !important; /* Force blue */
     color: #000;
 }
 
 .btn-profile:hover {
-    background-color: #e6c200;
+    background-color: #1a96d4 !important; /* Force darker blue on hover */
 }
 
 .icon-applications {

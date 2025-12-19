@@ -4,11 +4,23 @@ const prisma = require('../prismaClient');
 
 const register = async (req, res) => {
     try {
-        const { name, email, password, role, phone, city, university, title, about } = req.body;
+        const { name, email, password, accessCode, phone, city, university, title, about } = req.body;
 
         // Basic validation
         if (!email || !password || !name) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
+        // Role determination logic
+        let assignedRole = 'student';
+        const EMPLOYER_SECRET_CODE = 'SNAP-2025';
+
+        if (accessCode) {
+            if (accessCode === EMPLOYER_SECRET_CODE) {
+                assignedRole = 'employer';
+            } else {
+                return res.status(400).json({ success: false, message: 'Cod de angajator incorect.' });
+            }
         }
 
         // Check if user exists
@@ -26,7 +38,7 @@ const register = async (req, res) => {
                 name,
                 email,
                 password_hash: hashedPassword,
-                role: role || 'student',
+                role: assignedRole,
                 phone,
                 city,
                 university,
