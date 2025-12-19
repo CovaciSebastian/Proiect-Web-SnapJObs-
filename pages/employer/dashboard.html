@@ -145,8 +145,7 @@
                 }
 
                 myJobs.forEach(job => {
-                    // Mock applicants count
-                    const applicants = Math.floor(Math.random() * 6);
+                    const applicants = job.applicantsCount || 0;
                     
                     const card = document.createElement('div');
                     card.className = 'job-card-employer';

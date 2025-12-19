@@ -11,10 +11,21 @@ const getJobs = async (req, res) => {
 
         const jobs = await prisma.job.findMany({
             where,
+            include: {
+                _count: {
+                    select: { applications: true }
+                }
+            },
             orderBy: { created_at: 'desc' }
         });
 
-        res.json(jobs);
+        // Map to include a more friendly field name
+        const jobsWithCount = jobs.map(job => ({
+            ...job,
+            applicantsCount: job._count.applications
+        }));
+
+        res.json(jobsWithCount);
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
