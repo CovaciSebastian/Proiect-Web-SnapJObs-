@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (data && data.length > 0) {
                     const lat = parseFloat(data[0].lat);
                     const lon = parseFloat(data[0].lon);
-                    updateMapLocation(lat, lon);
+                    updateMapLocation(lat, lon, false); // Pass false to prevent reverse geocoding
                     map.setView([lat, lon], 15);
                 }
             } catch (error) {
@@ -85,11 +85,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-function updateMapLocation(lat, lng) {
+function updateMapLocation(lat, lng, updateAddressInput = true) {
     if (marker) map.removeLayer(marker);
     marker = L.marker([lat, lng]).addTo(map);
     document.getElementById('lat').value = lat;
     document.getElementById('lng').value = lng;
+
+    if (updateAddressInput) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    const addressString = data.display_name;
+                    const locationInput = document.getElementById('location');
+                    if (locationInput.value !== addressString) {
+                        locationInput.value = addressString;
+                    }
+                }
+            })
+            .catch(error => console.error("Reverse geocoding error:", error));
+    }
 }
 
 // 7. Handle Submit (PUT)
