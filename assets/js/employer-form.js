@@ -109,6 +109,38 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
     // BETTER: If no coords provided, let the backend/frontend logic handle it. 
     // We send whatever we have.
 
+    // Generate dynamic image based on type (Curated Static List)
+    const images = {
+        eveniment: [
+            'https://images.unsplash.com/photo-1514525253440-b393452e8d26?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80'
+        ],
+        fizic: [
+            'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1535732759880-bbd5c7265e3f?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1581094794329-cd56b50d7118?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1595814433015-e6f5ce69614e?auto=format&fit=crop&w=800&q=80'
+        ],
+        online: [
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=800&q=80'
+        ]
+    };
+
+    let pool = images.online;
+    if (type === 'eveniment') pool = images.eveniment;
+    if (type === 'fizic') pool = images.fizic;
+
+    const randomIndex = Math.floor(Math.random() * pool.length);
+    const image_url = pool[randomIndex];
+
     // Creare obiect job
     const jobData = {
         title,
@@ -120,7 +152,7 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
         date,
         lat,
         lng,
-        image_url: `img/job-${type}.png`
+        image_url: image_url
     };
 
     try {

@@ -56,12 +56,21 @@ function renderJobs(jobsList) {
             btnDisabled = "disabled";
         }
 
+        let imgPath = job.image_url || job.image;
+        
+        // Fallback if no image
+        if (!imgPath) {
+            imgPath = 'https://placehold.co/300x300?text=Job';
+        } else if (!imgPath.startsWith('http') && !imgPath.startsWith('assets/')) {
+             imgPath = 'assets/' + imgPath;
+        }
+
         newJob.innerHTML = `
             <div class="job-card-header">
                 <span class="job-type-badge">${job.type.toUpperCase()}</span>
             </div>
             <a href="pages/student/dashboard.html?id=${job.id}">         
-                <img src="assets/${job.image_url || job.image}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
+                <img src="${imgPath}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
                 <h3 class="job-title">${job.title}</h3>
             </a>
             
@@ -86,21 +95,14 @@ function renderJobs(jobsList) {
 // Funcție Căutare
 function initSearch() {
     let searchBar = document.getElementById("search");
-    let searchResults = document.querySelector(".search-results");
-    let mainContainer = document.querySelector(".tot"); // Pentru efectul de blur
 
-    searchBar.addEventListener("keyup", (e) => {
-        const term = e.target.value.toLowerCase();
-        
-        // Filtrăm joburile
-        const filteredJobs = jobs.filter(job => 
-            job.title.toLowerCase().includes(term) || 
-            job.company.toLowerCase().includes(term)
-        );
-
-        // Opțional: Afișăm rezultate în dropdown (search-results)
-        // Sau randăm direct în lista principală (mai simplu pentru utilizator)
-        renderJobs(filteredJobs);
+    searchBar.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            const term = e.target.value.trim();
+            if (term) {
+                window.location.href = `pages/student/search-results.html?q=${encodeURIComponent(term)}`;
+            }
+        }
     });
 }
 
