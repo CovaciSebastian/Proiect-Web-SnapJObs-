@@ -1,44 +1,5 @@
 [
     {
-        "id": 1,
-        "title": "Promoter Festival Muzică",
-        "company": "EventHorizons",
-        "type": "eveniment",
-        "salary": "250 RON/zi",
-        "location": "București, Romexpo",
-        "lat": 44.4762,
-        "lng": 26.0634,
-        "date": "2025-08-15",
-        "description": "Căutăm persoane energice pentru împărțire flyere și scanare bilete la intrare. Program 14:00 - 22:00.",
-        "image": "img/job-eveniment.png"
-    },
-    {
-        "id": 2,
-        "title": "Operator Introducere Date (Remote)",
-        "company": "DataFlow Solutions",
-        "type": "online",
-        "salary": "20 RON/oră",
-        "location": "Remote",
-        "lat": null,
-        "lng": null,
-        "date": "2025-06-01",
-        "description": "Ai nevoie doar de un laptop și atenție la detalii. Program flexibil, ideal printre cursuri.",
-        "image": "img/job-online.png"
-    },
-    {
-        "id": 3,
-        "title": "Ajutor Mutări Mobilă",
-        "company": "MoveIt Fast",
-        "type": "fizic",
-        "salary": "300 RON/zi",
-        "location": "București, Sector 3",
-        "lat": 44.4177,
-        "lng": 26.1300,
-        "date": "2025-06-10",
-        "description": "Muncă fizică. Ajutor la încărcarea și descărcarea mobilei dintr-un apartament. Se oferă masă de prânz.",
-        "image": "img/job-fizic.png"
-    },
-    {
         "id": 4,
         "title": "Hostess Eveniment Corporate",
         "company": "Business Events RO",
@@ -49,7 +10,7 @@
         "lng": 26.0867,
         "date": "2025-06-20",
         "description": "Primirea invitaților și oferirea de informații. Ținută elegantă obligatorie (asigurată de noi).",
-        "image": "img/job-eveniment.png"
+        "image": "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800"
     },
     {
         "id": 5,
@@ -62,7 +23,7 @@
         "lng": null,
         "date": "2025-07-01",
         "description": "Verificarea comentariilor și mesajelor pentru o pagină de brand. Program 2 ore/zi timp de o lună.",
-        "image": "img/job-online.png"
+        "image": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=800"
     },
     {
         "id": 6,
@@ -71,11 +32,37 @@
         "type": "fizic",
         "salary": "180 RON/zi",
         "location": "Ilfov, Chitila",
-        "lat": 44.5050,
-        "lng": 25.9800,
+        "lat": 44.505,
+        "lng": 25.98,
         "date": "2025-06-05",
         "description": "Aranjare cutii pe rafturi. Nu necesită experiență. Transport asigurat de la Metrou 1 Mai.",
-        "image": "img/job-fizic.png"
+        "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800"
+    },
+    {
+        "id": 2,
+        "title": "Operator Introducere Date (Remote)",
+        "company": "DataFlow Solutions",
+        "type": "online",
+        "salary": "20 RON/oră",
+        "location": "Remote",
+        "lat": null,
+        "lng": null,
+        "date": "2025-06-01",
+        "description": "Ai nevoie doar de un laptop și atenție la detalii. Program flexibil, ideal printre cursuri.",
+        "image": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=800"
+    },
+    {
+        "id": 3,
+        "title": "Ajutor Mutări Mobilă",
+        "company": "MoveIt Fast",
+        "type": "fizic",
+        "salary": "300 RON/zi",
+        "location": "București, Sector 3",
+        "lat": 44.4177,
+        "lng": 26.13,
+        "date": "2025-06-10",
+        "description": "Muncă fizică. Ajutor la încărcarea și descărcarea mobilei dintr-un apartament. Se oferă masă de prânz.",
+        "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800"
     },
     {
         "id": 7,
@@ -85,10 +72,10 @@
         "salary": "200 RON/zi",
         "location": "Piața Constituției",
         "lat": 44.4275,
-        "lng": 26.0920,
+        "lng": 26.092,
         "date": "2025-06-15",
         "description": "Împărțire apă și medalii participanților la maraton. Program 08:00 - 16:00.",
-        "image": "img/job-eveniment.png"
+        "image": "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=800"
     },
     {
         "id": 8,
@@ -101,7 +88,33 @@
         "lng": 26.0525,
         "date": "2025-06-12",
         "description": "Oferire mostre gratuite clienților din mall. Program 4 ore, flexibil după-amiaza.",
-        "image": "img/job-eveniment.png"
+        "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800"
+    },
+    {
+        "id": 11,
+        "title": "Supraveghetor Stand Târg Carte",
+        "company": "BookFest",
+        "type": "eveniment",
+        "salary": "180 RON/zi",
+        "location": "Romexpo",
+        "lat": 44.4765,
+        "lng": 26.064,
+        "date": "2025-06-01",
+        "description": "Vânzare cărți și aranjare stand. Program full-time pentru 1 zi.",
+        "image": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800"
+    },
+    {
+        "id": 1,
+        "title": "Promoter Festival Muzică",
+        "company": "EventHorizons",
+        "type": "eveniment",
+        "salary": "250 RON/zi",
+        "location": "București, Romexpo",
+        "lat": 44.4762,
+        "lng": 26.0634,
+        "date": "2025-08-15",
+        "description": "Căutăm persoane energice pentru împărțire flyere și scanare bilete la intrare. Program 14:00 - 22:00.",
+        "image": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=800"
     },
     {
         "id": 9,
@@ -114,7 +127,7 @@
         "lng": 26.1527,
         "date": "2025-07-20",
         "description": "Manipulare echipamente scenă și lumini. Muncă fizică intensă. Se oferă masă.",
-        "image": "img/job-fizic.png"
+        "image": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=800"
     },
     {
         "id": 10,
@@ -124,22 +137,9 @@
         "salary": "400 RON/zi",
         "location": "Parcul Herăstrău",
         "lat": 44.4705,
-        "lng": 26.0820,
+        "lng": 26.082,
         "date": "2025-06-22",
         "description": "Ajutor la cărat echipament și gestionat luminile pentru ședința foto.",
-        "image": "img/job-eveniment.png"
-    },
-    {
-        "id": 11,
-        "title": "Supraveghetor Stand Târg Carte",
-        "company": "BookFest",
-        "type": "eveniment",
-        "salary": "180 RON/zi",
-        "location": "Romexpo",
-        "lat": 44.4765,
-        "lng": 26.0640,
-        "date": "2025-06-01",
-        "description": "Vânzare cărți și aranjare stand. Program full-time pentru 1 zi.",
-        "image": "img/job-eveniment.png"
+        "image": "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"
     }
 ]

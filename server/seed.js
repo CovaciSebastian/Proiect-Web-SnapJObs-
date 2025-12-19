@@ -4,6 +4,7 @@ const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const { getThematicImage } = require('./utils/imageHelper');
 require('dotenv').config();
 
 const connectionString = process.env.DATABASE_URL;
@@ -35,6 +36,8 @@ async function main() {
 
     // 3. Insert jobs
     for (const job of jobsData) {
+        const imageUrl = job.image && !job.image.startsWith('img/') ? job.image : getThematicImage(job.title, job.description, job.type);
+        
         await prisma.job.create({
             data: {
                 employer_id: employer.id,
@@ -47,7 +50,7 @@ async function main() {
                 lng: job.lng,
                 date: job.date,
                 description: job.description,
-                image_url: job.image
+                image_url: imageUrl
             }
         });
     }

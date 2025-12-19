@@ -1,4 +1,5 @@
 const prisma = require('../prismaClient');
+const { getThematicImage } = require('../utils/imageHelper');
 
 const getJobs = async (req, res) => {
     try {
@@ -60,6 +61,8 @@ const createJob = async (req, res) => {
 
         const { title, company, type, salary, location, lat, lng, description, image_url, date } = req.body;
 
+        const finalImageUrl = image_url || getThematicImage(title, description, type);
+
         const job = await prisma.job.create({
             data: {
                 employer_id: req.user.id,
@@ -71,7 +74,7 @@ const createJob = async (req, res) => {
                 lat,
                 lng,
                 description,
-                image_url,
+                image_url: finalImageUrl,
                 date
             }
         });
@@ -86,7 +89,7 @@ const createJob = async (req, res) => {
 const updateJob = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, company, type, salary, location, lat, lng, description, date } = req.body;
+        const { title, company, type, salary, location, lat, lng, description, image_url, date } = req.body;
 
         // 1. Check if job exists
         const job = await prisma.job.findUnique({ where: { id: parseInt(id) } });
@@ -111,6 +114,7 @@ const updateJob = async (req, res) => {
                 lat,
                 lng,
                 description,
+                image_url: image_url || job.image_url,
                 date
             }
         });

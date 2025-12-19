@@ -105,9 +105,18 @@ function renderJobs(jobsToRender) {
             btnDisabled = "disabled"; 
         }
 
+        // Image path handling
+        let imgPath = job.image_url || job.image;
+        if (imgPath && !imgPath.startsWith('http') && !imgPath.startsWith('assets/')) {
+             imgPath = 'assets/' + imgPath; // student-jobs.html is in root
+        }
+
         const card = document.createElement('div');
         card.className = 'job-card-list';
         card.innerHTML = `
+            <div style="width: 100px; height: 100px; margin-right: 15px; flex-shrink: 0;">
+                <img src="${imgPath}" alt="${job.title}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" onerror="this.src='https://placehold.co/100x100?text=Job'">
+            </div>
             <div class="job-card-content">
                 <h3 style="color: #29b6f6; margin: 0 0 5px 0;">
                     <a href="job-detail.html?id=${job.id}" style="text-decoration: none; color: inherit;">${job.title}</a>
