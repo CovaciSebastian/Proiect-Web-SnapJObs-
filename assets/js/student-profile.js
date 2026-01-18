@@ -99,3 +99,32 @@ async function saveProfile() {
         alert("Eroare server");
     }
 }
+
+async function deleteAccount() {
+    const confirmDelete = confirm("Ești sigur că vrei să îți ștergi contul? Această acțiune este ireversibilă.");
+    if (!confirmDelete) return;
+
+    try {
+        const res = await fetch(`${PROFILE_API_URL}/api/auth/delete`, {
+            method: 'DELETE',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        const result = await res.json();
+
+        if (result.success) {
+            alert("Contul a fost șters cu succes.");
+            sessionStorage.clear();
+            localStorage.removeItem('myApplications');
+            window.location.href = '../../index.html'; // Redirect to home
+        } else {
+            alert(result.message || "Eroare la ștergerea contului");
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Eroare server");
+    }
+}

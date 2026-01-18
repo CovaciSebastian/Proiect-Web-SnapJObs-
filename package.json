@@ -26,5 +26,8 @@
     "concurrently": "^9.2.1",
     "http-proxy-middleware": "^3.0.5",
     "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "resend": "^6.7.0"
   }
 }

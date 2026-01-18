@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../prismaClient');
+const { sendConfirmationEmail } = require('../utils/emailService');
 
 const register = async (req, res) => {
     try {
@@ -36,6 +37,9 @@ const register = async (req, res) => {
                 provider: 'email',
             }
         });
+
+        // Send confirmation email asynchronously (don't await to block response)
+        sendConfirmationEmail(email, name);
 
         res.status(201).json({ success: true, message: 'User created successfully' });
     } catch (error) {
@@ -203,4 +207,29 @@ const updateProfile = async (req, res) => {
     }
 };
 
-module.exports = { register, login, googleCallback, logout, status, setRole, updateProfile };
+const deleteAccount = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        await prisma.user.delete({
+            where: { id: req.user.id }
+        });
+
+        // Destroy session
+        req.logout(function(err) {
+            if (err) { return next(err); }
+            req.session.destroy((err) => {
+                res.clearCookie('connect.sid');
+                res.json({ success: true, message: 'Account deleted successfully' });
+            });
+        });
+
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+module.exports = { register, login, googleCallback, logout, status, setRole, updateProfile, deleteAccount };
