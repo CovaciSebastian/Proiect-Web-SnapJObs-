@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const PROFILE_API_URL = 'http://localhost:3000';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadProfile() {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/status`, { credentials: 'include' });
+        const res = await fetch(`${PROFILE_API_URL}/api/auth/status`, { credentials: 'include' });
         const data = await res.json();
 
         if (data.isAuthenticated) {
@@ -76,7 +76,7 @@ async function saveProfile() {
     };
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+        const res = await fetch(`${PROFILE_API_URL}/api/auth/profile`, {
             method: 'PATCH',
             headers: { 
                 'Content-Type': 'application/json'
