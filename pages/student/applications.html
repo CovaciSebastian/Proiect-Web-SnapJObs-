@@ -125,23 +125,26 @@
       </div>
     </footer>
 
+    <script src="../../assets/js/sidebar.js"></script>
+    <script src="../../assets/js/auth.js"></script>
     <script>
         // Funcția principală pentru randarea și gestionarea aplicațiilor
         async function renderApplications() {
             const list = document.getElementById('applicationsList');
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                window.location.href = "../../login.html";
-                return;
-            }
-
+            // Auth check handled by auth.js + backend 401
+            
             list.innerHTML = ''; 
 
             try {
-                const res = await fetch('http://localhost:3000/api/applications/my-applications', {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                const res = await fetch('http://localhost:3000/api/applications/my', {
+                    credentials: 'include'
                 });
+                
+                if (res.status === 401) {
+                    window.location.href = "../../login.html";
+                    return;
+                }
+
                 const myApps = await res.json();
                 
                 if (myApps.length === 0) {
@@ -187,11 +190,10 @@
             const confirmDelete = confirm("Ești sigur că vrei să retragi aplicarea?");
             if (!confirmDelete) return;
 
-            const token = localStorage.getItem('token');
             try {
                 const res = await fetch(`http://localhost:3000/api/applications/${jobId}`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    credentials: 'include'
                 });
                 const data = await res.json();
 
@@ -221,6 +223,5 @@
             renderApplications(); 
         });
     </script>
-    <script src="../../assets/js/sidebar.js"></script>
 </body>
 </html>

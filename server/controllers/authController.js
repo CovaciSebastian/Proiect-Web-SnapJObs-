@@ -59,18 +59,11 @@ const login = async (req, res) => {
         }
 
         // Use req.login provided by Passport to establish a session
-        req.login(user, { session: false }, (err) => {
+        req.login(user, (err) => {
             if (err) return next(err);
-
-            const token = jwt.sign(
-                { id: user.id, role: user.role },
-                process.env.JWT_SECRET,
-                { expiresIn: '1d' }
-            );
 
             return res.json({
                 success: true,
-                token,
                 user: {
                     id: user.id,
                     name: user.name,
@@ -90,10 +83,19 @@ const googleCallback = (req, res) => {
     // Passport authentication is successful, user is attached to req.user
     // Now, redirect based on role.
     const userRole = req.user.role;
+
+    // TODO: Use env var for frontend URL
+    const FRONTEND_URL = 'http://localhost:8080'; 
+
+    if (userRole === 'PENDING') {
+        return res.redirect(`${FRONTEND_URL}/pages/select-role.html`);
+    }
+
     if (userRole === 'EMPLOYER') {
-        res.redirect('/pages/employer/dashboard.html');
+        res.redirect(`${FRONTEND_URL}/pages/employer/dashboard.html`);
     } else {
-        res.redirect('/pages/student/dashboard.html');
+        // Redirect students to Homepage (Acasă)
+        res.redirect(`${FRONTEND_URL}/index.html`);
     }
 };
 
@@ -119,6 +121,11 @@ const status = (req, res) => {
                 name: req.user.name,
                 email: req.user.email,
                 role: req.user.role,
+                phone: req.user.phone,
+                city: req.user.city,
+                university: req.user.university,
+                about: req.user.about,
+                title: req.user.title
             },
         });
     } else {
@@ -127,4 +134,73 @@ const status = (req, res) => {
 };
 
 
-module.exports = { register, login, googleCallback, logout, status };
+const setRole = async (req, res) => {
+    try {
+        const { role, accessCode } = req.body;
+        
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        if (!['STUDENT', 'EMPLOYER'].includes(role)) {
+            return res.status(400).json({ success: false, message: 'Invalid role' });
+        }
+
+        if (role === 'EMPLOYER') {
+            const EMPLOYER_SECRET_CODE = 'SNAP-2025';
+            if (accessCode !== EMPLOYER_SECRET_CODE) {
+                return res.status(400).json({ success: false, message: 'Cod de angajator incorect.' });
+            }
+        }
+
+        await prisma.user.update({
+            where: { id: req.user.id },
+            data: { role }
+        });
+
+        // Update the session user
+        req.user.role = role;
+        req.session.save(); // Ensure session is updated
+
+        res.json({ success: true, message: 'Role updated successfully' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const updateProfile = async (req, res) => {
+    try {
+        const { name, phone, city, university, about, title } = req.body;
+        
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id: req.user.id },
+            data: { 
+                name, 
+                phone, 
+                city, 
+                university, 
+                about, 
+                title 
+            }
+        });
+
+        // Update session
+        // Note: Passport session user is deserialized from DB on every request usually, 
+        // but if we want immediate reflection without refresh in some setups, we update req.user.
+        // However, deserializeUser usually fetches fresh data.
+        
+        res.json({ success: true, message: 'Profile updated', user: updatedUser });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+module.exports = { register, login, googleCallback, logout, status, setRole, updateProfile };

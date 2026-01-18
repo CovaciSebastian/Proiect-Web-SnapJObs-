@@ -48,6 +48,7 @@ const applyToJob = async (req, res) => {
 
 const getMyApplications = async (req, res) => {
     try {
+        console.log('Fetching applications for user:', req.user.id);
         const applications = await prisma.application.findMany({
             where: { student_id: req.user.id }, // req.user.id is correctly a string
             include: { 
@@ -58,16 +59,17 @@ const getMyApplications = async (req, res) => {
                         company: true,
                         location: true,
                         salary: true,
-                        image_url: true
+                        image_url: true,
+                        date: true // Ensure date is selected
                     }
                 }
             }
         });
-
+        console.log('Found applications:', applications.length);
         res.json(applications);
     } catch (error) {
         console.error('Get my applications error:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error: ' + error.message });
     }
 };
 
@@ -106,7 +108,7 @@ const getApplicantsByJob = async (req, res) => {
         console.log(`Job Employer ID: ${job.employer_id} (Type: ${typeof job.employer_id})`);
         console.log(`Request User ID: ${req.user.id} (Type: ${typeof req.user.id})`);
 
-        if (Number(job.employer_id) !== Number(req.user.id)) {
+        if (job.employer_id !== req.user.id) {
             return res.status(403).json({ success: false, message: 'Not authorized: You do not own this job' });
         }
 
@@ -151,7 +153,7 @@ const updateApplicationStatus = async (req, res) => {
         }
 
         // Check ownership
-        if (Number(application.job.employer_id) !== Number(req.user.id)) {
+        if (application.job.employer_id !== req.user.id) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 

@@ -55,7 +55,7 @@ const getJobById = async (req, res) => {
 const createJob = async (req, res) => {
     try {
         // Protected route, req.user exists
-        if (req.user.role !== 'employer') {
+        if (req.user.role !== 'EMPLOYER') {
             return res.status(403).json({ success: false, message: 'Only employers can post jobs' });
         }
 

@@ -1,11 +1,14 @@
 const express = require('express');
 const passport = require('passport');
-const { register, login, googleCallback, logout, status } = require('../controllers/authController');
+const { register, login, googleCallback, logout, status, setRole, updateProfile } = require('../controllers/authController');
+const { isAuthenticated } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Existing email/password routes
 router.post('/register', register);
 router.post('/login', login);
+router.post('/set-role', isAuthenticated, setRole);
+router.patch('/profile', isAuthenticated, updateProfile);
 
 // Google SSO routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

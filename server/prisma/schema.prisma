@@ -11,7 +11,7 @@ model User {
   email     String    @unique
   name      String?
   password  String?
-  role      String    @default("STUDENT") // STUDENT sau EMPLOYER
+  role      String    @default("PENDING") // STUDENT, EMPLOYER, or PENDING
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -19,12 +19,12 @@ model User {
   provider  String    @default("email") // 'email' sau 'google'
   googleId  String?   @unique // ID-ul unic de la Google (câmpul 'sub')
 
-  // Câmpuri din modelul vechi ce pot fi utile, dar le las comentate momentan
-  // phone      String?
-  // city       String?
-  // university String?
-  // about      String?
-  // title      String?
+  // Câmpuri din modelul vechi ce pot fi utile
+  phone      String?
+  city       String?
+  university String?
+  about      String?
+  title      String?
 
   jobs         Job[]
   applications Application[]

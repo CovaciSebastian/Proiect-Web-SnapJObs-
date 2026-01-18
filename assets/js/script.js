@@ -170,19 +170,3 @@ function updateApplicationsCount() {
 
 // --- START THE APP ---
 document.addEventListener('DOMContentLoaded', checkAuthAndInit);
-
-
-// --- HELPERS (SIDE MENU) ---
-function showModala() {
-    const modala = document.querySelector(".side-nav");
-    const backk = document.querySelector(".tot");
-    if(modala && backk) {
-        modala.classList.add("seVede");
-        backk.classList.add("blurata");
-        
-        backk.addEventListener("click", () => {
-            modala.classList.remove("seVede");
-            backk.classList.remove("blurata");
-        }, { once: true });
-    }
-}

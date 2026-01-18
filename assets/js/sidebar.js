@@ -1,49 +1,3 @@
-// Function to update header buttons based on login status
-function updateHeaderButtons() {
-    const headerActions = document.querySelector('.header-actions');
-    const authButtons = headerActions.querySelector('.auth-buttons');
-    let profileLink = headerActions.querySelector('.profile-link'); // Look for existing profile link
-    const applicationsIcon = headerActions.querySelector('.icon-applications'); // Keep applications icon visible
-
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-    if (isLoggedIn) {
-        if (authButtons) authButtons.style.display = 'none'; // Hide login/register buttons
-
-        if (!profileLink) { // If profile link doesn't exist, create it
-            profileLink = document.createElement('div');
-            profileLink.className = 'profile-link';
-            // Adjust href based on current location (root vs subfolder)
-            const currentPath = window.location.pathname;
-            let profileHref = 'pages/student/profile.html';
-            if (currentPath.includes('/pages/student/') || currentPath.includes('/pages/employer/')) {
-                profileHref = '../student/profile.html'; // Adjust for subfolders
-            }
-            profileLink.innerHTML = `
-                <a href="${profileHref}" class="auth-btn btn-profile" style="background-color: #29b6f6 !important; color: #000 !important;">Profilul meu</a>
-            `;
-            // Insert before applications icon or at the end if applicationsIcon is null
-            if (applicationsIcon) {
-                headerActions.insertBefore(profileLink, applicationsIcon); 
-            } else {
-                headerActions.appendChild(profileLink);
-            }
-        } else {
-            profileLink.style.display = 'flex'; // Ensure it's visible if it already existed
-        }
-    } else {
-        if (authButtons) authButtons.style.display = 'flex'; // Show login/register buttons
-        if (profileLink) profileLink.style.display = 'none'; // Hide profile link
-    }
-
-    // Update application count (if it exists)
-    const applicationsCount = JSON.parse(localStorage.getItem('myApplications')) || [];
-    const applicationsCountSpan = document.getElementById('applicationCount');
-    if (applicationsCountSpan) {
-        applicationsCountSpan.innerText = applicationsCount.length;
-    }
-}
-
 // Global function for Logo Click
 function goToHomePage() {
     const currentPath = window.location.pathname;
@@ -58,7 +12,6 @@ function goToHomePage() {
         window.location.href = pathPrefix + 'index.html';
     }
 }
-
 
 // Existing showModala function (original)
 function showModala() {
@@ -101,46 +54,3 @@ function handleSidebarLinkClick(event, targetPath) {
         window.location.reload();
     }
 }
-
-
-// Logic for Logout confirmation and initial header update
-document.addEventListener('DOMContentLoaded', () => {
-    updateHeaderButtons(); // Initial update on page load
-
-    const logoutLink = document.querySelector('.side-nav a[href*="login.html"]'); // Use [href*="login.html"] to match various login paths
-
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (event) => {
-            event.preventDefault();
-
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-            if (isLoggedIn) {
-                const confirmLogout = window.confirm("Ești sigur că vrei să te deconectezi de la cont?");
-                if (confirmLogout) {
-                    localStorage.setItem('isLoggedIn', 'false');
-                    localStorage.removeItem('currentUser'); // Clear current user data
-                    localStorage.removeItem('myApplications'); // Clear applications on logout
-                    window.alert("Te-ai deconectat cu succes!");
-                    
-                    // Determine correct redirect path for login
-                    const currentPath = window.location.pathname;
-                    let redirectPath = 'login.html';
-                    if (currentPath.includes('/pages/student/') || currentPath.includes('/pages/employer/')) {
-                        redirectPath = '../../login.html';
-                    }
-                    window.location.href = redirectPath;
-                }
-            } else {
-                window.alert("Nu ești conectat la un cont.");
-                // Redirect to login if not logged in but trying to logout (e.g., direct access)
-                const currentPath = window.location.pathname;
-                let redirectPath = 'login.html';
-                if (currentPath.includes('/pages/student/') || currentPath.includes('/pages/employer/')) {
-                    redirectPath = '../../login.html';
-                }
-                window.location.href = redirectPath;
-            }
-        });
-    }
-});
