@@ -47,13 +47,25 @@ model Job {
 }
 
 model Application {
+
   id         Int      @id @default(autoincrement())
+
   job_id     Int
+
   job        Job      @relation(fields: [job_id], references: [id], onDelete: Cascade)
+
   student_id Int
+
   student    User     @relation(fields: [student_id], references: [id])
+
+  status     String   @default("pending") // 'pending', 'accepted', 'rejected'
+
   applied_at DateTime @default(now())
 
+
+
   @@unique([job_id, student_id])
+
   @@map("applications")
+
 }

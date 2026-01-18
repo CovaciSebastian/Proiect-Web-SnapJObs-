@@ -94,27 +94,12 @@ function showModala() {
 function handleSidebarLinkClick(event, targetPath) {
     const currentPathname = window.location.pathname;
     
-    // Normalize targetPath to handle variations (e.g., "dashboard.html" vs "/pages/student/dashboard.html")
-    let normalizedTargetPath = targetPath;
-    if (targetPath.startsWith('pages/')) { // Assume root-relative if starts with pages/
-        normalizedTargetPath = `/${targetPath}`;
-    } else if (targetPath.startsWith('../')) { // Adjust for parent-relative paths
-        const currentDir = currentPathname.substring(0, currentPathname.lastIndexOf('/'));
-        const parentDir = currentDir.substring(0, currentDir.lastIndexOf('/'));
-        normalizedTargetPath = `${parentDir}/${targetPath.substring(targetPath.lastIndexOf('/') + 1)}`;
-    } else if (!targetPath.includes('/')) { // Simple file name in current directory
-        normalizedTargetPath = currentPathname.substring(0, currentPathname.lastIndexOf('/')) + `/${targetPath}`;
+    // Check if we are going to the EXACT same page to just refresh
+    // We can check if the current URL ends with the target path (relative)
+    if (currentPathname.endsWith(targetPath.replace('../', '/').replace('./', '/'))) {
+        event.preventDefault();
+        window.location.reload();
     }
-
-    // Attempt to normalize currentPathname to match the ending of targetPath
-    const currentFileName = currentPathname.substring(currentPathname.lastIndexOf('/') + 1);
-    const targetFileName = normalizedTargetPath.substring(normalizedTargetPath.lastIndexOf('/') + 1);
-
-    if (currentFileName === targetFileName) {
-        event.preventDefault(); // Prevent default navigation
-        window.location.reload(); // Force refresh
-    }
-    // If not on the same page, allow default link behavior
 }
 
 
