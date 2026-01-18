@@ -1,27 +1,14 @@
-// Default Data (in case nothing is saved)
-const defaultProfile = {
-    name: "Student Nou",
-    role: "Student",
-    email: "student@email.com",
-    phone: "07xx xxx xxx",
-    location: "București",
-    university: "Universitatea Politehnica",
-    bio: "Salut! Sunt un student muncitor și caut oportunități part-time.",
-    avatar: "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-};
+const PROFILE_API_URL = 'http://localhost:3000';
 
-// Load Profile on Page Load
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
 
-    // Setup Form Submission
     const form = document.getElementById('profileForm');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         saveProfile();
     });
 
-    // Close modal when clicking outside
     const modalOverlay = document.getElementById('editModal');
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) {
@@ -30,74 +17,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function loadProfile() {
-    let profile = JSON.parse(localStorage.getItem('userProfile'));
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+async function loadProfile() {
+    try {
+        const res = await fetch(`${PROFILE_API_URL}/api/auth/status`, { credentials: 'include' });
+        const data = await res.json();
 
-    // Initialize or Update Profile Logic
-    if (currentUser) {
-        let shouldSave = false;
+        if (data.isAuthenticated) {
+            const user = data.user;
+            
+            // Store user data for modal population
+            window.currentUserProfile = user;
 
-        // If no profile exists, create one based on currentUser
-        if (!profile) {
-            profile = {
-                name: currentUser.name || defaultProfile.name,
-                role: defaultProfile.role,
-                email: currentUser.email || defaultProfile.email,
-                phone: defaultProfile.phone,
-                location: defaultProfile.location,
-                university: defaultProfile.university,
-                bio: defaultProfile.bio,
-                avatar: defaultProfile.avatar
-            };
-            shouldSave = true;
-        } 
-        // If profile exists but still has default "dummy" data, overwrite with currentUser data
-        else {
-            if (profile.name === defaultProfile.name && currentUser.name) {
-                profile.name = currentUser.name;
-                shouldSave = true;
-            }
-            if (profile.email === defaultProfile.email && currentUser.email) {
-                profile.email = currentUser.email;
-                shouldSave = true;
-            }
+            document.getElementById('p-name').textContent = user.name || '-';
+            document.getElementById('p-role').textContent = user.role || 'Student'; // System role
+            document.getElementById('p-email').textContent = user.email || '-';
+            document.getElementById('p-phone').textContent = user.phone || '-';
+            document.getElementById('p-location').textContent = user.city || '-';
+            document.getElementById('p-university').textContent = user.university || '-';
+            document.getElementById('p-bio').textContent = user.about || 'Adaugă o scurtă descriere...';
+            
+        } else {
+             window.location.href = '../../login.html';
         }
-
-        if (shouldSave) {
-            localStorage.setItem('userProfile', JSON.stringify(profile));
-        }
-    } else if (!profile) {
-        // Fallback if no user is logged in and no profile exists
-        profile = defaultProfile;
+    } catch (e) {
+        console.error("Profile load error", e);
     }
-
-    // Populate UI
-    document.getElementById('p-name').textContent = profile.name;
-    document.getElementById('p-role').textContent = profile.role;
-    document.getElementById('p-bio').textContent = profile.bio;
-    document.getElementById('p-email').textContent = profile.email;
-    document.getElementById('p-phone').textContent = profile.phone;
-    document.getElementById('p-location').textContent = profile.location;
-    document.getElementById('p-university').textContent = profile.university;
-    
-    // Optional: Avatar logic could be extended here
 }
 
 function openEditModal() {
     const modal = document.getElementById('editModal');
     modal.classList.add('active');
 
-    // Fill form with current data
-    const storedProfile = JSON.parse(localStorage.getItem('userProfile')) || defaultProfile;
+    const user = window.currentUserProfile || {};
     
-    document.getElementById('in-name').value = storedProfile.name;
-    document.getElementById('in-role').value = storedProfile.role;
-    document.getElementById('in-email').value = storedProfile.email;
-    document.getElementById('in-phone').value = storedProfile.phone;
-    document.getElementById('in-location').value = storedProfile.location;
-    document.getElementById('in-university').value = storedProfile.university;
-    document.getElementById('in-bio').value = storedProfile.bio;
+    document.getElementById('in-name').value = user.name || '';
+    document.getElementById('in-role').value = user.title || ''; // Map "Titlu" input to title field
+    document.getElementById('in-email').value = user.email || '';
+    document.getElementById('in-phone').value = user.phone || '';
+    document.getElementById('in-location').value = user.city || '';
+    document.getElementById('in-university').value = user.university || '';
+    document.getElementById('in-bio').value = user.about || '';
 }
 
 function closeEditModal() {
@@ -105,24 +64,38 @@ function closeEditModal() {
     modal.classList.remove('active');
 }
 
-function saveProfile() {
-    // Get values from form
-    const newProfile = {
+async function saveProfile() {
+    const updatedData = {
         name: document.getElementById('in-name').value,
-        role: document.getElementById('in-role').value,
-        email: document.getElementById('in-email').value,
+        title: document.getElementById('in-role').value,
+        // email: document.getElementById('in-email').value, // Email updates might be restricted? sending anyway
         phone: document.getElementById('in-phone').value,
-        location: document.getElementById('in-location').value,
+        city: document.getElementById('in-location').value,
         university: document.getElementById('in-university').value,
-        bio: document.getElementById('in-bio').value,
-        avatar: "https://cdn-icons-png.flaticon.com/512/149/149071.png" // Keep default avatar for now
+        about: document.getElementById('in-bio').value
     };
 
-    // Save to LocalStorage
-    localStorage.setItem('userProfile', JSON.stringify(newProfile));
+    try {
+        const res = await fetch(`${PROFILE_API_URL}/api/auth/profile`, {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(updatedData)
+        });
+        
+        const result = await res.json();
 
-    // Refresh UI and Close
-    loadProfile();
-    closeEditModal();
-    alert("Profilul a fost actualizat cu succes!");
+        if (result.success) {
+            alert("Profil actualizat!");
+            closeEditModal();
+            loadProfile(); // Reload to show changes
+        } else {
+            alert(result.message || "Eroare la actualizare");
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Eroare server");
+    }
 }

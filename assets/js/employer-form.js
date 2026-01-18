@@ -90,8 +90,7 @@ function updateMapLocation(lat, lng, updateAddressInput = true) {
 document.getElementById("jobForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (sessionStorage.getItem('isAuthenticated') !== 'true') {
         alert("Trebuie să fii logat ca angajator.");
         window.location.href = "../../login.html";
         return;
@@ -113,18 +112,6 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
     // Convert to float or null
     lat = lat ? parseFloat(lat) : null;
     lng = lng ? parseFloat(lng) : null;
-
-    // If type is online, maybe force null? Or keep user selection.
-    // Let's keep selection if they made one, otherwise null.
-    if (type === 'online' && !lat) {
-        // No coords needed for online unless specified
-    } 
-    // Fallback if physical/event and NO map click: Random (or default center)?
-    // User requested "poti sa o pui de pe harta SAU scris". 
-    // If they typed but didn't click map, we have no coords. 
-    // For now, if no coords, we leave null. The student dashboard handles nulls by randomizing or ignoring.
-    // BETTER: If no coords provided, let the backend/frontend logic handle it. 
-    // We send whatever we have.
 
     // Generate dynamic image based on type (Curated Static List)
     const images = {
@@ -176,9 +163,9 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
         const res = await fetch('http://localhost:3000/api/jobs', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(jobData)
         });
         const data = await res.json();

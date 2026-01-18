@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Get user role for button logic
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const isEmployer = currentUser && currentUser.role === 'employer';
+        const userRole = sessionStorage.getItem('userRole');
+        const isEmployer = userRole === 'EMPLOYER' || userRole === 'employer';
         const myApplications = JSON.parse(localStorage.getItem('myApplications')) || [];
 
         // Render jobs
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const card = document.createElement('div');
             card.className = 'job-card';
             card.innerHTML = `
-                <a href="dashboard.html?id=${job.id}" style="width: 100%; text-decoration: none;">
+                <a href="job-detail.html?id=${job.id}" style="width: 100%; text-decoration: none;">
                     <img src="${imgPath}" alt="${job.title}" onerror="this.src='https://placehold.co/300x200?text=Job'">
                     <h3>${job.title}</h3>
                 </a>
@@ -85,16 +85,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Re-use apply logic (simplified version of dashboard logic)
 async function applyToJob(jobId) {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (sessionStorage.getItem('isAuthenticated') !== 'true') {
         alert('Trebuie să te loghezi pentru a aplica!');
         window.location.href = '../../login.html';
         return;
     }
 
-    // Check if employer locally first (UI button should be disabled anyway, but double check)
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser && currentUser.role === 'employer') {
+    const userRole = sessionStorage.getItem('userRole');
+    if (userRole === 'EMPLOYER' || userRole === 'employer') {
         alert("Angajatorii nu pot aplica.");
         return;
     }
@@ -103,9 +101,9 @@ async function applyToJob(jobId) {
         const res = await fetch('http://localhost:3000/api/applications', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({ jobId })
         });
         const data = await res.json();

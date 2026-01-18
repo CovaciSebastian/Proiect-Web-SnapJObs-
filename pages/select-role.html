@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapJobs - Selectează Rolul</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/header-styles.css">
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 40px;
+            background: #1a1620;
+            border-radius: 12px;
+            border: 1px solid #333;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        .auth-title {
+            color: #29b6f6;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .role-option {
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+        }
+
+        .role-option:hover {
+            border-color: #29b6f6;
+        }
+
+        .role-option.selected {
+            border-color: #29b6f6;
+            background: #0a1f2a;
+        }
+
+        .role-option h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+
+        .role-option p {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 12px;
+            background: #29b6f6;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .auth-submit:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <div class="auth-container">
+        <h1 class="auth-title">Finalizează Înregistrarea</h1>
+        <p style="color: #ccc; margin-bottom: 30px;">Selectează tipul de cont pe care dorești să îl folosești.</p>
+        
+        <div id="roleSelection">
+            <div class="role-option" onclick="selectRole('STUDENT')">
+                <h3>Student</h3>
+                <p>Caut joburi part-time și oportunități de evenimente.</p>
+            </div>
+
+            <div class="role-option" onclick="selectRole('EMPLOYER')">
+                <h3>Angajator</h3>
+                <p>Postez joburi și caut studenți.</p>
+                <div id="employerCodeInput" class="hidden form-group">
+                    <input type="text" id="accessCode" placeholder="Cod de acces (obligatoriu)">
+                </div>
+            </div>
+        </div>
+
+        <button id="confirmBtn" class="auth-submit" onclick="submitRole()" disabled>Confirmă Selecția</button>
+        <p id="errorMsg" style="color: red; display: none; margin-top: 15px;"></p>
+    </div>
+
+    <script src="../../assets/js/select-role.js"></script>
+</body>
+</html>

@@ -87,9 +87,9 @@ function renderJobs(jobsToRender) {
         shadowSize: [41, 41]
     });
 
-    // Get current user to check role
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const isEmployer = currentUser && currentUser.role === 'employer';
+    // Get current user role from sessionStorage (set by auth.js)
+    const userRole = sessionStorage.getItem('userRole');
+    const isEmployer = userRole === 'EMPLOYER' || userRole === 'employer';
 
     jobsToRender.forEach(job => {
         // 1. Render in List
@@ -101,14 +101,14 @@ function renderJobs(jobsToRender) {
 
         if (isEmployer) {
             btnText = "Nu poți aplica";
-            btnClass = "disabled"; // Reuse disabled style or add specific one
+            btnClass = "disabled"; 
             btnDisabled = "disabled"; 
         }
 
         // Image path handling
         let imgPath = job.image_url || job.image;
         if (imgPath && !imgPath.startsWith('http') && !imgPath.startsWith('assets/')) {
-             imgPath = 'assets/' + imgPath; // student-jobs.html is in root
+             imgPath = 'assets/' + imgPath; 
         }
 
         const card = document.createElement('div');
@@ -170,9 +170,6 @@ function setupFilters() {
     const radiusValue = document.getElementById('radiusValue');
     const resetBtn = document.querySelector('.filter-sidebar button[onclick="resetFilters()"]');
 
-    // Remove onclick attribute from HTML to avoid "resetFilters is not defined" if using module scope
-    // But here we are in global scope mostly. 
-    // Let's attach event listener to reset button if it doesn't work via onclick
     if (resetBtn) {
         resetBtn.onclick = resetFilters;
     }
@@ -192,24 +189,16 @@ function filterJobs() {
     const radius = parseInt(document.getElementById('radiusFilter').value);
 
     const filtered = allJobs.filter(job => {
-        // Type Filter
         if (type !== 'all' && job.type !== type) return false;
-
-        // Date Filter
         if (date && job.date && !job.date.startsWith(date)) return false;
-
-        // Radius Filter
-        // If radius is 50 (max), we show all. Otherwise we filter by distance.
         if (radius < 50) {
             if (job.lat && job.lng) {
                 const dist = getDistance(userLat, userLng, parseFloat(job.lat), parseFloat(job.lng));
                 if (dist > radius) return false;
             } else {
-                // If job has no coordinates, we exclude it when a specific radius is set
                 return false;
             }
         }
-        
         return true;
     });
 
@@ -225,12 +214,9 @@ function resetFilters() {
 }
 
 async function loadMyApplications() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
     try {
-        const res = await fetch('http://localhost:3000/api/applications/my-applications', {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const res = await fetch('http://localhost:3000/api/applications/my', {
+            credentials: 'include'
         });
         if (res.ok) {
             const data = await res.json();
@@ -253,10 +239,9 @@ function updateApplicationCount() {
 
 // Apply Logic
 async function applyToJob(jobId) {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (sessionStorage.getItem('isAuthenticated') !== 'true') {
         alert('Trebuie să te loghezi pentru a aplica!');
-        window.location.href = '../../login.html'; // Adjusted path
+        window.location.href = '../../login.html'; 
         return;
     }
 
@@ -264,9 +249,9 @@ async function applyToJob(jobId) {
         const res = await fetch('http://localhost:3000/api/applications', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({ jobId })
         });
         const data = await res.json();
@@ -274,7 +259,6 @@ async function applyToJob(jobId) {
         if (data.success) {
             alert('Ai aplicat cu succes!');
             
-            // Update local storage for UI consistency
             let applications = JSON.parse(localStorage.getItem('myApplications')) || [];
             if (!applications.includes(jobId)) {
                 applications.push(jobId);
@@ -282,13 +266,11 @@ async function applyToJob(jobId) {
             }
             updateApplicationCount();
 
-            // Update UI immediately (Buttons in List and Map Popups)
             const btns = document.querySelectorAll(`button[onclick="applyToJob(${jobId})"], #applyBtn_${jobId}, .map-apply-btn[onclick="applyToJob(${jobId})"]`);
             btns.forEach(btn => {
                 btn.innerText = "Ai aplicat";
                 btn.classList.add('applied');
                 btn.disabled = true;
-                // For map button specifically which might need style adjustments
                 if(btn.classList.contains('map-apply-btn')) {
                      btn.style.backgroundColor = '#0e7490';
                      btn.style.cursor = 'default';

@@ -21,10 +21,9 @@ async function main() {
         create: {
             email: 'employer@snapjobs.com',
             name: 'SnapJobs Official Employer',
-            password_hash: hashedPassword,
-            role: 'employer',
-            title: 'Recruiting Team',
-            about: 'The official recruiting account for initial job listings.'
+            password: hashedPassword,
+            role: 'EMPLOYER',
+            provider: 'email'
         }
     });
 

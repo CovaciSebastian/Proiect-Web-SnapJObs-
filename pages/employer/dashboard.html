@@ -207,23 +207,52 @@
         </div>
     </div>
 
+    <script src="../../assets/js/sidebar.js"></script>
+    <script src="../../assets/js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const list = document.getElementById('employerJobsList');
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const token = localStorage.getItem('token');
-
-            if (!currentUser || !token) {
-                window.location.href = "../../login.html";
-                return;
-            }
-
+            // Auth check handled by auth.js + backend
+            
+            // Wait for auth check to populate sessionStorage if needed, or just try fetching
+            // The backend /api/jobs likely needs updating to filter by 'me' if employer?
+            // Wait, the original code fetched ALL jobs and filtered client side by currentUser.id.
+            // currentUser came from localStorage.
+            
+            // We need to know who the current user is.
+            // auth.js sets sessionStorage.getItem('currentUserId').
+            
+            // We should delay slightly or retry if ID is missing? 
+            // Better: Let's fetch jobs. If the backend is secure, maybe we should have an endpoint for "my jobs"?
+            // The current endpoint /api/jobs returns all jobs.
+            
+            const currentUserId = sessionStorage.getItem('currentUserId');
+            // If auth.js hasn't run yet, this might be null.
+            // However, auth.js runs on DOMContentLoaded too. Race condition.
+            
+            // Let's rely on the fetch.
+            
             try {
-                const res = await fetch('http://localhost:3000/api/jobs');
+                const res = await fetch('http://localhost:3000/api/jobs', { credentials: 'include' });
                 const allJobs = await res.json();
                 
+                // We need the user ID to filter.
+                // If we don't have it in sessionStorage, we might need to wait or fetch status ourselves.
+                // But auth.js runs checkAuthStatus().
+                
+                // Let's fetch status directly here to be safe/sure.
+                const statusRes = await fetch('http://localhost:3000/api/auth/status', { credentials: 'include' });
+                const statusData = await statusRes.json();
+                
+                if (!statusData.isAuthenticated) {
+                     window.location.href = "../../login.html";
+                     return;
+                }
+                
+                const myId = statusData.user.id;
+                
                 // Filter by my ID
-                const myJobs = allJobs.filter(job => job.employer_id === currentUser.id);
+                const myJobs = allJobs.filter(job => job.employer_id === myId);
 
                 if (myJobs.length === 0) {
                     list.innerHTML = '<p style="color: #888;">Nu ai publicat niciun job încă.</p>';
@@ -267,7 +296,6 @@
             const modal = document.getElementById('applicantsModal');
             const list = document.getElementById('applicantsList');
             const title = document.getElementById('modalJobTitle');
-            const token = localStorage.getItem('token');
 
             title.innerText = `Aplicanți pentru: ${jobTitle}`;
             list.innerHTML = '<p>Se încarcă...</p>';
@@ -275,7 +303,7 @@
 
             try {
                 const res = await fetch(`http://localhost:3000/api/applications/job/${jobId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    credentials: 'include'
                 });
                 const data = await res.json();
 
@@ -328,14 +356,13 @@
         }
 
         async function updateStatus(applicationId, status, jobId, jobTitle) {
-            const token = localStorage.getItem('token');
             try {
                 const res = await fetch(`http://localhost:3000/api/applications/${applicationId}/status`, {
                     method: 'PATCH',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
+                        'Content-Type': 'application/json'
                     },
+                    credentials: 'include',
                     body: JSON.stringify({ status })
                 });
 
@@ -363,11 +390,10 @@
             const confirmDelete = confirm("Ești sigur că vrei să ștergi acest job? Această acțiune este ireversibilă!");
             if (!confirmDelete) return;
 
-            const token = localStorage.getItem('token');
             try {
                 const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`, {
                     method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    credentials: 'include'
                 });
 
                 if (res.ok) {
@@ -383,6 +409,5 @@
             }
         }
     </script>
-    <script src="../../assets/js/sidebar.js"></script>
 </body>
 </html>

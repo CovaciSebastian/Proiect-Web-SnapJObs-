@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const myApps = JSON.parse(localStorage.getItem('myApplications')) || [];
         const hasApplied = myApps.includes(parseInt(jobId)) || myApps.includes(jobId.toString());
         
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const isEmployer = currentUser && currentUser.role === 'employer';
+        const userRole = sessionStorage.getItem('userRole');
+        const isEmployer = userRole === 'EMPLOYER' || userRole === 'employer';
 
         let btnText = hasApplied ? 'Ai Aplicat Deja' : 'Aplică Acum';
         let btnDisabledAttr = hasApplied ? 'disabled' : '';
@@ -73,8 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (btn && !hasApplied && !isEmployer) { // Only bind if not applied AND not employer
             btn.addEventListener('click', async () => { // Async for API call
                 // API Call Logic (Updated to match dashboard)
-                const token = localStorage.getItem('token');
-                if (!token) {
+                if (sessionStorage.getItem('isAuthenticated') !== 'true') {
                     alert('Trebuie să te loghezi!');
                     window.location.href = '../../login.html';
                     return;
@@ -84,9 +83,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const res = await fetch('http://localhost:3000/api/applications', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
+                            'Content-Type': 'application/json'
                         },
+                        credentials: 'include',
                         body: JSON.stringify({ jobId: parseInt(jobId) })
                     });
                     const data = await res.json();

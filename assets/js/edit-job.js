@@ -113,9 +113,8 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
 
     const params = new URLSearchParams(window.location.search);
     const jobId = params.get('id');
-    const token = localStorage.getItem('token');
 
-    if (!token) {
+    if (sessionStorage.getItem('isAuthenticated') !== 'true') {
         window.location.href = "../../login.html";
         return;
     }
@@ -143,9 +142,9 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
         const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(jobData)
         });
         const data = await res.json();

@@ -2,11 +2,52 @@ let jobsContainer = document.querySelector(".listProduct");
 let applicationsCountSpan = document.getElementById("applications-count");
 
 let jobs = [];
-let myApplications = [];
+// This will now be populated from the backend if the user is authenticated
+let myApplicationIds = new Set(); 
 
-// Inițializare Aplicație
+// --- NEW AUTHENTICATION FLOW ---
+
+// Check authentication status on page load
+async function checkAuthAndInit() {
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/status', {credentials: 'include'}); // 'credentials: include' is crucial for cookies
+        const data = await res.json();
+
+        if (data.isAuthenticated) {
+            sessionStorage.setItem('isAuthenticated', 'true');
+            sessionStorage.setItem('userRole', data.user.role);
+            sessionStorage.setItem('currentUserId', data.user.id);
+            await fetchUserApplications(data.user.id); // Fetch applications for the logged-in user
+        } else {
+            sessionStorage.clear();
+        }
+    } catch (error) {
+        console.error('Failed to check authentication status:', error);
+        sessionStorage.clear();
+    }
+    // After checking auth, proceed to initialize the rest of the app
+    initApp();
+}
+
+async function fetchUserApplications(userId) {
+    // NOTE: This assumes an endpoint /api/applications/my exists that returns all application for the logged-in user.
+    // This endpoint needs to be created on the backend.
+    try {
+        const res = await fetch(`http://localhost:3000/api/applications/my`, {credentials: 'include'});
+        if (res.ok) {
+            const applications = await res.json();
+            myApplicationIds = new Set(applications.map(app => app.job_id));
+        }
+    } catch (error) {
+        console.error("Could not fetch user applications:", error);
+    }
+}
+
+
+// --- APPLICATION INITIALIZATION ---
+
 const initApp = () => {
-    // 1. Încărcăm Joburile
+    // 1. Fetch Jobs
     fetch("http://localhost:3000/api/jobs")
         .then((response) => response.json())
         .then((data) => {
@@ -14,75 +55,58 @@ const initApp = () => {
             renderJobs(jobs);
             initSearch();
         })
-        .catch((err) => console.error("Eroare încărcare joburi:", err));
+        .catch((err) => console.error("Error loading jobs:", err));
 
-    // 2. Încărcăm Aplicațiile salvate (dacă există)
-    if (localStorage.getItem("myApplications")) {
-        myApplications = JSON.parse(localStorage.getItem("myApplications"));
-    }
+    // 2. Update UI based on fetched applications
     updateApplicationsCount();
 };
 
-// Funcție Randare Joburi
+// --- UI RENDERING ---
+
 function renderJobs(jobsList) {
+    if (!jobsContainer) return;
     jobsContainer.innerHTML = "";
     
     if (jobsList.length === 0) {
-        jobsContainer.innerHTML = "<p style='text-align:center; width:100%;'>Nu am găsit joburi conform criteriilor.</p>";
+        jobsContainer.innerHTML = "<p style='text-align:center; width:100%;'>No jobs found based on criteria.</p>";
         return;
     }
 
-    // Check user role
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const isEmployer = currentUser && currentUser.role === 'employer';
+    const isEmployer = sessionStorage.getItem('userRole') === 'EMPLOYER';
 
     jobsList.forEach((job) => {
         let newJob = document.createElement("div");
         newJob.dataset.id = job.id;
-        newJob.classList.add("item");
-        // Adăugăm o clasă pentru tipul jobului (opțional, pentru stilizare)
-        newJob.classList.add(job.type); 
+        newJob.classList.add("item", job.type);
 
-        // Verificăm dacă utilizatorul a aplicat deja
-        const hasApplied = myApplications.includes(job.id.toString()) || myApplications.includes(job.id);
+        const hasApplied = myApplicationIds.has(job.id);
         
-        let btnText = hasApplied ? "Ai aplicat" : "Aplică acum";
+        let btnText = hasApplied ? "Applied" : "Apply Now";
         let btnClass = hasApplied ? "addCart applied" : "addCart";
-        let btnDisabled = hasApplied ? "disabled" : "";
-
+        let btnDisabled = hasApplied || isEmployer ? "disabled" : "";
         if (isEmployer) {
-            btnText = "Nu poți aplica";
-            btnClass = "addCart disabled"; // Reuse existing style but disable
-            btnDisabled = "disabled";
+            btnText = "Cannot Apply";
         }
 
-        let imgPath = job.image_url || job.image;
-        
-        // Fallback if no image
-        if (!imgPath) {
-            imgPath = 'https://placehold.co/300x300?text=Job';
-        } else if (!imgPath.startsWith('http') && !imgPath.startsWith('assets/')) {
-             imgPath = 'assets/' + imgPath;
-        }
+
+        let imgPath = job.image_url || 'assets/img/job-online.png'; // Default fallback
 
         newJob.innerHTML = `
             <div class="job-card-header">
                 <span class="job-type-badge">${job.type.toUpperCase()}</span>
             </div>
-            <a href="pages/student/dashboard.html?id=${job.id}">         
+            <a href="pages/student/job-detail.html?id=${job.id}">         
                 <img src="${imgPath}" alt="${job.title}" onerror="this.src='https://placehold.co/300x300?text=Job'">
                 <h3 class="job-title">${job.title}</h3>
             </a>
-            
             <div class="job-info">
                 <p class="company"><i class="icon-company"></i> ${job.company}</p>
                 <p class="location">📍 ${job.location}</p>
                 <div class="salary-box">
-                    <span class="salary-label">Salariu:</span>
+                    <span class="salary-label">Salary:</span>
                     <span class="salary-value">${job.salary}</span>
                 </div>
             </div>
-            
             <button class="${btnClass}" onclick="applyToJob(${job.id})" ${btnDisabled}>
                 ${btnText}
             </button>
@@ -92,10 +116,11 @@ function renderJobs(jobsList) {
     });
 }
 
-// Funcție Căutare
+// --- USER ACTIONS ---
+
 function initSearch() {
     let searchBar = document.getElementById("search");
-
+    if (!searchBar) return;
     searchBar.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             const term = e.target.value.trim();
@@ -106,74 +131,42 @@ function initSearch() {
     });
 }
 
-// Funcție Aplicare la Job
 async function applyToJob(jobId) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Trebuie să te loghezi pentru a aplica!');
-        window.location.href = 'login.html';
+    if (sessionStorage.getItem('isAuthenticated') !== 'true') {
+        alert('You must be logged in to apply!');
+        window.location.href = '/login.html';
         return;
     }
 
     try {
         const res = await fetch('http://localhost:3000/api/applications', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ jobId })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jobId }),
+            credentials: 'include' // Send cookies with the request
         });
         const data = await res.json();
 
-        if (data.success) {
-            // Adăugăm în listă locală pentru UI
-            if (!myApplications.includes(jobId)) {
-                myApplications.push(jobId);
-                localStorage.setItem("myApplications", JSON.stringify(myApplications));
-            }
-
-            // Actualizăm UI
+        if (res.ok) {
+            myApplicationIds.add(jobId);
             updateApplicationsCount();
-            
-            // Re-randăm pentru a actualiza starea butoanelor
-            renderJobs(jobs);
-
-            alert("Felicitări! Ai aplicat cu succes la acest job.");
+            renderJobs(jobs); // Re-render to update button state
+            alert("Congratulations! You have successfully applied for this job.");
         } else {
-            alert(data.message || 'Eroare la aplicare');
+            alert(data.message || 'Error applying');
         }
     } catch (error) {
         console.error(error);
-        alert('Eroare de server');
+        alert('Server error');
     }
 }
 
 function updateApplicationsCount() {
     if(applicationsCountSpan) {
-        applicationsCountSpan.innerText = myApplications.length;
+        applicationsCountSpan.innerText = myApplicationIds.size;
     }
 }
 
-// Pornire
-initApp();
 
-// Funcții helper (din vechiul cod, adaptate sau păstrate dacă e nevoie de meniu lateral)
-function showModala() {
-    const modala = document.querySelector(".side-nav");
-    const backk = document.querySelector(".tot"); // Containerul principal
-    if(modala && backk) {
-        modala.classList.add("seVede");
-        backk.classList.add("blurata");
-        
-        // Click outside to close
-        backk.addEventListener("click", () => {
-            modala.classList.remove("seVede");
-            backk.classList.remove("blurata");
-        }, { once: true }); // Event listener-ul se șterge singur după un click
-    }
-}
-
-function loadMore() {
-    console.log("Funcționalitate de paginare - de implementat dacă sunt multe joburi.");
-}
+// --- START THE APP ---
+document.addEventListener('DOMContentLoaded', checkAuthAndInit);
