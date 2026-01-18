@@ -1,6 +1,6 @@
 const express = require('express');
-const { applyToJob, getMyApplications, withdrawApplication } = require('../controllers/applicationController');
-const { isAuthenticated } = require('../middleware/authMiddleware'); // Using the new middleware
+const { applyToJob, getMyApplications, withdrawApplication, getApplicantsByJob, updateApplicationStatus } = require('../controllers/applicationController');
+const { isAuthenticated, protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Route to get all applications for the logged-in user
@@ -11,5 +11,9 @@ router.post('/', isAuthenticated, applyToJob);
 
 // Route to withdraw an application
 router.delete('/:jobId', isAuthenticated, withdrawApplication);
+
+// Employer routes
+router.get('/job/:jobId', protect, getApplicantsByJob);
+router.patch('/:id/status', protect, updateApplicationStatus);
 
 module.exports = router;
