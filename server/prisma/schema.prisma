@@ -26,6 +26,9 @@ model User {
   about      String?
   title      String?
 
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
   jobs         Job[]
   applications Application[]
 

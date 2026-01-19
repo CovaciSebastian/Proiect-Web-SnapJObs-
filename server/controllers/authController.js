@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const prisma = require('../prismaClient');
-const { sendConfirmationEmail } = require('../utils/emailService');
+const { sendConfirmationEmail, sendPasswordResetEmail } = require('../utils/emailService');
 
 const register = async (req, res) => {
     try {
@@ -232,4 +233,73 @@ const deleteAccount = async (req, res) => {
     }
 };
 
-module.exports = { register, login, googleCallback, logout, status, setRole, updateProfile, deleteAccount };
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user) {
+            // Security: Don't reveal user existence
+            return res.json({ success: true, message: 'Dacă adresa există, vei primi un email.' });
+        }
+
+        // Generate token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { resetToken, resetTokenExpiry }
+        });
+
+        // Send email
+        // Use FRONTEND_URL from env or hardcoded fallback
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        const resetLink = `${frontendUrl}/reset-password.html?token=${resetToken}`;
+        
+        // Async send
+        sendPasswordResetEmail(email, resetLink);
+
+        res.json({ success: true, message: 'Dacă adresa există, vei primi un email.' });
+
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({ success: false, message: 'Server error: ' + error.message });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        const user = await prisma.user.findFirst({
+            where: {
+                resetToken: token,
+                resetTokenExpiry: { gt: new Date() } // Token must not be expired
+            }
+        });
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Token invalid sau expirat.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                password: hashedPassword,
+                resetToken: null,
+                resetTokenExpiry: null
+            }
+        });
+
+        res.json({ success: true, message: 'Parola a fost resetată cu succes.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+module.exports = { register, login, googleCallback, logout, status, setRole, updateProfile, deleteAccount, forgotPassword, resetPassword };
