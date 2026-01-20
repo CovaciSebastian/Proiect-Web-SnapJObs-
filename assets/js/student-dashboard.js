@@ -42,7 +42,7 @@ function initMap() {
 
 async function loadJobs() {
     try {
-        const response = await fetch('http://localhost:3000/api/jobs');
+        const response = await fetch('/api/jobs');
         allJobs = await response.json();
         
         // Check for URL params (e.g. ?type=eveniment)
@@ -215,7 +215,7 @@ function resetFilters() {
 
 async function loadMyApplications() {
     try {
-        const res = await fetch('http://localhost:3000/api/applications/my', {
+        const res = await fetch('/api/applications/my', {
             credentials: 'include'
         });
         if (res.ok) {
@@ -246,7 +246,7 @@ async function applyToJob(jobId) {
     }
 
     try {
-        const res = await fetch('http://localhost:3000/api/applications', {
+        const res = await fetch('/api/applications', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

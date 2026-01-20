@@ -136,7 +136,7 @@
             list.innerHTML = ''; 
 
             try {
-                const res = await fetch('http://localhost:3000/api/applications/my', {
+                const res = await fetch('/api/applications/my', {
                     credentials: 'include'
                 });
                 
@@ -191,7 +191,7 @@
             if (!confirmDelete) return;
 
             try {
-                const res = await fetch(`http://localhost:3000/api/applications/${jobId}`, {
+                const res = await fetch(`/api/applications/${jobId}`, {
                     method: 'DELETE',
                     credentials: 'include'
                 });

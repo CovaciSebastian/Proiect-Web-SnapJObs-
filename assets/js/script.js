@@ -10,7 +10,7 @@ let myApplicationIds = new Set();
 // Check authentication status on page load
 async function checkAuthAndInit() {
     try {
-        const res = await fetch('http://localhost:3000/api/auth/status', {credentials: 'include'}); // 'credentials: include' is crucial for cookies
+        const res = await fetch('/api/auth/status', {credentials: 'include'}); // 'credentials: include' is crucial for cookies
         const data = await res.json();
 
         if (data.isAuthenticated) {
@@ -33,7 +33,7 @@ async function fetchUserApplications(userId) {
     // NOTE: This assumes an endpoint /api/applications/my exists that returns all application for the logged-in user.
     // This endpoint needs to be created on the backend.
     try {
-        const res = await fetch(`http://localhost:3000/api/applications/my`, {credentials: 'include'});
+        const res = await fetch(`/api/applications/my`, {credentials: 'include'});
         if (res.ok) {
             const applications = await res.json();
             myApplicationIds = new Set(applications.map(app => app.job_id));
@@ -48,7 +48,7 @@ async function fetchUserApplications(userId) {
 
 const initApp = () => {
     // 1. Fetch Jobs
-    fetch("http://localhost:3000/api/jobs")
+    fetch("/api/jobs")
         .then((response) => response.json())
         .then((data) => {
             jobs = data;
@@ -139,7 +139,7 @@ async function applyToJob(jobId) {
     }
 
     try {
-        const res = await fetch('http://localhost:3000/api/applications', {
+        const res = await fetch('/api/applications', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ jobId }),
