@@ -1,6 +1,6 @@
 const express = require('express');
 const { applyToJob, getMyApplications, withdrawApplication, getApplicantsByJob, updateApplicationStatus } = require('../controllers/applicationController');
-const { isAuthenticated, protect } = require('../middleware/authMiddleware');
+const { isAuthenticated } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Route to get all applications for the logged-in user
@@ -13,7 +13,7 @@ router.post('/', isAuthenticated, applyToJob);
 router.delete('/:jobId', isAuthenticated, withdrawApplication);
 
 // Employer routes
-router.get('/job/:jobId', protect, getApplicantsByJob);
-router.patch('/:id/status', protect, updateApplicationStatus);
+router.get('/job/:jobId', isAuthenticated, getApplicantsByJob);
+router.patch('/:id/status', isAuthenticated, updateApplicationStatus);
 
 module.exports = router;
