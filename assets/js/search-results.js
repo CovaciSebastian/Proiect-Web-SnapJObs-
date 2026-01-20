@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // Fetch jobs from API
-        const res = await fetch('http://localhost:3000/api/jobs');
+        const res = await fetch('/api/jobs');
         const jobs = await res.json();
 
         // Filter jobs
@@ -98,7 +98,7 @@ async function applyToJob(jobId) {
     }
 
     try {
-        const res = await fetch('http://localhost:3000/api/applications', {
+        const res = await fetch('/api/applications', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

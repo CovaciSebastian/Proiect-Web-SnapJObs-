@@ -1,4 +1,4 @@
-const PROFILE_API_URL = 'http://localhost:3000';
+const PROFILE_API_URL = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();

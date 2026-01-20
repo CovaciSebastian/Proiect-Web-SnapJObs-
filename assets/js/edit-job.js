@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. Fetch Job Data
     try {
-        const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`);
+        const res = await fetch(`/api/jobs/${jobId}`);
         if (!res.ok) throw new Error("Job not found");
         const job = await res.json();
 
@@ -139,7 +139,7 @@ document.getElementById("jobForm").addEventListener("submit", async function(e) 
     };
 
     try {
-        const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`, {
+        const res = await fetch(`/api/jobs/${jobId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

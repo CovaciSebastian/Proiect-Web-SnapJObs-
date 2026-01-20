@@ -1,5 +1,5 @@
 let selectedRole = null;
-const API_BASE_URL = 'http://localhost:3000'; // Adjust if needed
+const API_BASE_URL = ''; // Adjust if needed
 
 function selectRole(role) {
     selectedRole = role;

@@ -233,7 +233,7 @@
             // Let's rely on the fetch.
             
             try {
-                const res = await fetch('http://localhost:3000/api/jobs', { credentials: 'include' });
+                const res = await fetch('/api/jobs', { credentials: 'include' });
                 const allJobs = await res.json();
                 
                 // We need the user ID to filter.
@@ -241,7 +241,7 @@
                 // But auth.js runs checkAuthStatus().
                 
                 // Let's fetch status directly here to be safe/sure.
-                const statusRes = await fetch('http://localhost:3000/api/auth/status', { credentials: 'include' });
+                const statusRes = await fetch('/api/auth/status', { credentials: 'include' });
                 const statusData = await statusRes.json();
                 
                 if (!statusData.isAuthenticated) {
@@ -302,7 +302,7 @@
             modal.style.display = 'block';
 
             try {
-                const res = await fetch(`http://localhost:3000/api/applications/job/${jobId}`, {
+                const res = await fetch(`/api/applications/job/${jobId}`, {
                     credentials: 'include'
                 });
                 const data = await res.json();
@@ -357,7 +357,7 @@
 
         async function updateStatus(applicationId, status, jobId, jobTitle) {
             try {
-                const res = await fetch(`http://localhost:3000/api/applications/${applicationId}/status`, {
+                const res = await fetch(`/api/applications/${applicationId}/status`, {
                     method: 'PATCH',
                     headers: { 
                         'Content-Type': 'application/json'
@@ -391,7 +391,7 @@
             if (!confirmDelete) return;
 
             try {
-                const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`, {
+                const res = await fetch(`/api/jobs/${jobId}`, {
                     method: 'DELETE',
                     credentials: 'include'
                 });

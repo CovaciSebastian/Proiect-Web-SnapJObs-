@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // 1. Fetch job directly from API
-        const res = await fetch(`http://localhost:3000/api/jobs/${jobId}`);
+        const res = await fetch(`/api/jobs/${jobId}`);
         
         if (!res.ok) {
             container.innerHTML = '<p style="color: red;">Jobul nu a fost găsit.</p>';
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 try {
-                    const res = await fetch('http://localhost:3000/api/applications', {
+                    const res = await fetch('/api/applications', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
