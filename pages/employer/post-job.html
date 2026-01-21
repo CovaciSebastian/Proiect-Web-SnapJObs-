@@ -9,62 +9,111 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
+        /* Force scrollability and layout fixes */
+        html, body {
+            height: 100%;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            background-color: #110e15;
+            color: #EEEEEE;
+        }
+
+        /* Header z-index fix */
+        .header-1 {
+            position: relative;
+            z-index: 2000 !important;
+            background-color: #110e15;
+        }
+
+        .colaps {
+            z-index: 2001 !important;
+            cursor: pointer;
+        }
+
+        /* Form Container Styles */
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - 100px); /* Adjust for header height */
+            position: relative;
+            z-index: 10;
+        }
+
         .form-container {
             max-width: 600px;
-            margin: 40px auto;
+            margin: 0 auto 50px auto;
             background: #1a1a1a;
             padding: 30px;
             border-radius: 8px;
             border: 1px solid #29b6f6;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
             color: #29b6f6;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: bold;
+            font-size: 1.1em;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #000;
             border: 1px solid #555;
             color: #fff;
             border-radius: 4px;
+            box-sizing: border-box; /* Important for padding */
+            font-family: inherit;
         }
 
         .form-control:focus {
             border-color: #29b6f6;
             outline: none;
+            box-shadow: 0 0 5px rgba(41, 182, 246, 0.3);
+        }
+
+        /* Map Styles */
+        .map-container {
+            border: 1px solid #555;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        #mapPicker {
+            height: 350px; 
+            width: 100%;
+            z-index: 1;
+        }
+
+        .helper-text {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: block;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             background: #29b6f6;
             color: #000;
             font-weight: bold;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            margin-top: 10px;
+            transition: background 0.3s;
         }
 
         .btn-submit:hover {
-            background: #4fc3f7; /* Slightly lighter on hover */
-        }
-        
-        #mapPicker {
-            height: 300px; 
-            width: 100%; 
-            margin-top: 10px; 
-            border-radius: 4px;
-            border: 1px solid #555;
+            background: #4fc3f7;
         }
     </style>
 </head>
@@ -119,57 +168,65 @@
       <a href="../../login.html" onclick="handleSidebarLinkClick(event, 'login.html')">Logout</a>
     </div>
 
-    <div class="form-container">
-        <h2 style="color: #fff; text-align: center; margin-bottom: 30px;">Publică un Job Nou</h2>
-        
-        <form id="jobForm">
-            <div class="form-group">
-                <label>Titlu Job</label>
-                <input type="text" id="title" class="form-control" required placeholder="Ex: Promoter, Barman...">
-            </div>
-
-            <div class="form-group">
-                <label>Companie</label>
-                <input type="text" id="company" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label>Tip Job</label>
-                <select id="type" class="form-control">
-                    <option value="eveniment">Eveniment</option>
-                    <option value="fizic">Muncă Fizică</option>
-                    <option value="online">Online</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Dată</label>
-                <input type="date" id="date" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label>Salariu / Plată</label>
-                <input type="text" id="salary" class="form-control" placeholder="Ex: 200 RON/zi" required>
-            </div>
-
-            <div class="form-group">
-                <label>Locație (Adresă sau Click pe Hartă)</label>
-                <input type="text" id="location" class="form-control" placeholder="Ex: București, Sector 1" required>
-                <!-- Hidden inputs for coordinates -->
-                <input type="hidden" id="lat">
-                <input type="hidden" id="lng">
-                <!-- Map Container -->
-                <div id="mapPicker"></div>
-                <small style="color: #ccc;">* Click pe hartă pentru a seta locația exactă.</small>
-            </div>
+    <div class="main-content">
+        <div class="form-container">
+            <h2 style="color: #fff; text-align: center; margin-bottom: 30px;">Publică un Job Nou</h2>
             
-            <div class="form-group">
-                <label>Descriere</label>
-                <textarea id="description" class="form-control" rows="4" required></textarea>
-            </div>
+            <form id="jobForm">
+                <div class="form-group">
+                    <label>Titlu Job</label>
+                    <input type="text" id="title" class="form-control" required placeholder="Ex: Promoter, Barman, Curier...">
+                </div>
 
-            <button type="submit" class="btn-submit">Publică Job</button>
-        </form>
+                <div class="form-group">
+                    <label>Companie</label>
+                    <input type="text" id="company" class="form-control" required placeholder="Numele companiei tale">
+                </div>
+
+                <div class="form-group">
+                    <label>Tip Job</label>
+                    <select id="type" class="form-control">
+                        <option value="eveniment">Eveniment</option>
+                        <option value="fizic">Muncă Fizică</option>
+                        <option value="online">Online</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Dată</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Salariu / Plată</label>
+                    <input type="text" id="salary" class="form-control" placeholder="Ex: 200 RON/zi sau 3000 RON/proiect" required>
+                </div>
+
+                <!-- LOCATION SECTION START -->
+                <div class="form-group">
+                    <label for="location">Adresă Exactă (Conectată cu Harta)</label>
+                    <input type="text" id="location" class="form-control" placeholder="Ex: Calea Victoriei 12, București" required>
+                    <small class="helper-text">Scrie adresa aici sau dă click pe harta de mai jos.</small>
+                    
+                    <!-- Hidden inputs for coordinates -->
+                    <input type="hidden" id="lat">
+                    <input type="hidden" id="lng">
+                    
+                    <div class="map-container">
+                        <div id="mapPicker"></div>
+                    </div>
+                    <small class="helper-text">* Poți ajusta pin-ul dând click direct pe hartă.</small>
+                </div>
+                <!-- LOCATION SECTION END -->
+                
+                <div class="form-group">
+                    <label>Descriere Job</label>
+                    <textarea id="description" class="form-control" rows="5" required placeholder="Descrie responsabilitățile și cerințele..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Publică Job</button>
+            </form>
+        </div>
     </div>
 
     <!-- Leaflet JS -->
@@ -177,3 +234,5 @@
     <script src="../../assets/js/employer-form.js"></script>
     <script src="../../assets/js/sidebar.js"></script>
     <script src="../../assets/js/auth.js"></script>
+</body>
+</html>
